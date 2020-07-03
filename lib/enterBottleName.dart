@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EnterBottleName extends StatefulWidget {
-  EnterBottleName();
+  EnterBottleName({this.choice});
 
+  final String choice;
   @override
   _EnterBottleNameState createState() => _EnterBottleNameState();
 }
@@ -10,11 +12,51 @@ class EnterBottleName extends StatefulWidget {
 class _EnterBottleNameState extends State<EnterBottleName> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Row(
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            'Hellooooooo world!',
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.all(5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      CupertinoIcons.add,
+                      size: 100,
+                      color: Colors.blue,
+                    ),
+                    Text('32 oz'),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: CupertinoTextField(
+                  placeholder: "Ex: Blue Hydroflask",
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              CupertinoButton(
+                padding: EdgeInsets.all(0),
+                child: Text('Back'),
+              ),
+              CupertinoButton(
+                padding: EdgeInsets.all(0),
+                child: Text('Next'),
+              )
+            ],
           ),
         ],
       ),
