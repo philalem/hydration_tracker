@@ -9,6 +9,7 @@ class InitialQuestions extends StatefulWidget {
 }
 
 class _InitialQuestionsState extends State<InitialQuestions> {
+  List<bool> bottleSizeSelected = [false, false, false];
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
@@ -30,8 +31,13 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                         Container(
                           margin: EdgeInsets.all(5),
                           child: CupertinoButton(
+                            onPressed: () => setState(() {
+                              bottleSizeSelected[0] = !bottleSizeSelected[0];
+                            }),
                             padding: EdgeInsets.all(0),
-                            color: Colors.grey[100],
+                            color: bottleSizeSelected[0]
+                                ? Colors.blue
+                                : Colors.grey[100],
                             child: Icon(CupertinoIcons.battery_full),
                           ),
                         ),
@@ -48,8 +54,13 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                         Container(
                           margin: EdgeInsets.all(5),
                           child: CupertinoButton(
+                            onPressed: () => setState(() {
+                              bottleSizeSelected[1] = !bottleSizeSelected[1];
+                            }),
                             padding: EdgeInsets.all(0),
-                            color: Colors.grey[100],
+                            color: bottleSizeSelected[1]
+                                ? Colors.blue
+                                : Colors.grey[100],
                             child: Icon(CupertinoIcons.battery_full),
                           ),
                         ),
@@ -66,8 +77,13 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                         Container(
                           margin: EdgeInsets.all(5),
                           child: CupertinoButton(
+                            onPressed: () => setState(() {
+                              bottleSizeSelected[2] = !bottleSizeSelected[2];
+                            }),
                             padding: EdgeInsets.all(0),
-                            color: Colors.grey[100],
+                            color: bottleSizeSelected[2]
+                                ? Colors.blue
+                                : Colors.grey[100],
                             child: Icon(CupertinoIcons.battery_full),
                           ),
                         ),
