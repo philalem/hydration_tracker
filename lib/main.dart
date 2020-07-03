@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hydration_tracker/initialQuestions.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 void main() {
@@ -8,13 +10,12 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return CupertinoApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+      theme: CupertinoThemeData(
+        primaryColor: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: InitialQuestions(),
     );
   }
 }
@@ -31,8 +32,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+      appBar: CupertinoNavigationBar(
+        middle: Text(widget.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
