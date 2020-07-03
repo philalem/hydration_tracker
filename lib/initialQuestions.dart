@@ -25,18 +25,57 @@ class _InitialQuestionsState extends State<InitialQuestions> {
               Row(
                 children: <Widget>[
                   Expanded(
-                    child: CupertinoButton(
-                      child: Icon(CupertinoIcons.battery_full),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.all(5),
+                          child: CupertinoButton(
+                            padding: EdgeInsets.all(0),
+                            color: Colors.grey[100],
+                            child: Icon(CupertinoIcons.battery_full),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[Text('16 oz')],
+                        )
+                      ],
                     ),
                   ),
                   Expanded(
-                    child: CupertinoButton(
-                      child: Icon(CupertinoIcons.battery_full),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.all(5),
+                          child: CupertinoButton(
+                            padding: EdgeInsets.all(0),
+                            color: Colors.grey[100],
+                            child: Icon(CupertinoIcons.battery_full),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[Text('24 oz')],
+                        )
+                      ],
                     ),
                   ),
                   Expanded(
-                    child: CupertinoButton(
-                      child: Icon(CupertinoIcons.battery_full),
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.all(5),
+                          child: CupertinoButton(
+                            padding: EdgeInsets.all(0),
+                            color: Colors.grey[100],
+                            child: Icon(CupertinoIcons.battery_full),
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[Text('32 oz')],
+                        )
+                      ],
                     ),
                   ),
                 ],
