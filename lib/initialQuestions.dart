@@ -23,7 +23,11 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                 'What size water bottle do you use most?',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
+              SizedBox(
+                height: 10,
+              ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Expanded(
                     child: Column(
@@ -31,14 +35,15 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                         Container(
                           margin: EdgeInsets.all(5),
                           child: CupertinoButton(
-                            onPressed: () => setState(() {
-                              bottleSizeSelected[0] = !bottleSizeSelected[0];
-                            }),
+                            onPressed: () => _updateBottleSelection(0),
                             padding: EdgeInsets.all(0),
-                            color: bottleSizeSelected[0]
-                                ? Colors.blue
-                                : Colors.grey[100],
-                            child: Icon(CupertinoIcons.battery_full),
+                            child: Icon(
+                              CupertinoIcons.add,
+                              size: 150,
+                              color: bottleSizeSelected[0]
+                                  ? Colors.blue
+                                  : Colors.grey[300],
+                            ),
                           ),
                         ),
                         Row(
@@ -54,14 +59,15 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                         Container(
                           margin: EdgeInsets.all(5),
                           child: CupertinoButton(
-                            onPressed: () => setState(() {
-                              bottleSizeSelected[1] = !bottleSizeSelected[1];
-                            }),
+                            onPressed: () => _updateBottleSelection(1),
                             padding: EdgeInsets.all(0),
-                            color: bottleSizeSelected[1]
-                                ? Colors.blue
-                                : Colors.grey[100],
-                            child: Icon(CupertinoIcons.battery_full),
+                            child: Icon(
+                              CupertinoIcons.add,
+                              size: 170,
+                              color: bottleSizeSelected[1]
+                                  ? Colors.blue
+                                  : Colors.grey[300],
+                            ),
                           ),
                         ),
                         Row(
@@ -77,14 +83,15 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                         Container(
                           margin: EdgeInsets.all(5),
                           child: CupertinoButton(
-                            onPressed: () => setState(() {
-                              bottleSizeSelected[2] = !bottleSizeSelected[2];
-                            }),
+                            onPressed: () => _updateBottleSelection(2),
                             padding: EdgeInsets.all(0),
-                            color: bottleSizeSelected[2]
-                                ? Colors.blue
-                                : Colors.grey[100],
-                            child: Icon(CupertinoIcons.battery_full),
+                            child: Icon(
+                              CupertinoIcons.add,
+                              size: 200,
+                              color: bottleSizeSelected[2]
+                                  ? Colors.blue
+                                  : Colors.grey[300],
+                            ),
                           ),
                         ),
                         Row(
@@ -101,5 +108,33 @@ class _InitialQuestionsState extends State<InitialQuestions> {
         ),
       ),
     );
+  }
+
+  _updateBottleSelection(numberSelected) {
+    switch (numberSelected) {
+      case 0:
+        setState(() {
+          bottleSizeSelected[0] = !bottleSizeSelected[0];
+          bottleSizeSelected[1] = false;
+          bottleSizeSelected[2] = false;
+        });
+        break;
+      case 1:
+        setState(() {
+          bottleSizeSelected[0] = false;
+          bottleSizeSelected[1] = !bottleSizeSelected[1];
+          bottleSizeSelected[2] = false;
+        });
+        break;
+      case 2:
+        setState(() {
+          bottleSizeSelected[0] = false;
+          bottleSizeSelected[1] = false;
+          bottleSizeSelected[2] = !bottleSizeSelected[2];
+        });
+        break;
+      default:
+        break;
+    }
   }
 }
