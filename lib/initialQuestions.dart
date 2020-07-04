@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hydration_tracker/animatedIndexedStack.dart';
 import 'package:hydration_tracker/enterBottleName.dart';
+import 'package:hydration_tracker/home.dart';
 
 class InitialQuestions extends StatefulWidget {
   InitialQuestions();
@@ -23,6 +24,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController bottleNameController = TextEditingController();
     return CupertinoPageScaffold(
       child: SafeArea(
         child: Stack(
@@ -36,6 +38,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                   Center(
                       child: EnterBottleName(
                     choice: getChoice(),
+                    bottleNameController: bottleNameController,
                   )),
                 ],
               ),
@@ -54,11 +57,8 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                       child: Text('Back'),
                     ),
                   CupertinoButton(
-                    onPressed: () => bottleSizeSelected[0] ||
-                            bottleSizeSelected[1] ||
-                            bottleSizeSelected[2]
-                        ? setState(() => questionViewIndex = 1)
-                        : null,
+                    onPressed: () =>
+                        navigateToEditNameOrHome(bottleNameController),
                     padding: EdgeInsets.all(0),
                     child: Text('Next'),
                   )
@@ -69,6 +69,20 @@ class _InitialQuestionsState extends State<InitialQuestions> {
         ),
       ),
     );
+  }
+
+  void navigateToEditNameOrHome(bottleNameController) {
+    if (bottleNameController.text != null &&
+        bottleNameController.text != '' &&
+        questionViewIndex == 1) {
+      Navigator.of(context).push(CupertinoPageRoute(
+        builder: (context) => Home(),
+      ));
+    } else if (bottleSizeSelected[0] ||
+        bottleSizeSelected[1] ||
+        bottleSizeSelected[2]) {
+      setState(() => questionViewIndex = 1);
+    }
   }
 
   Container selectBottleSize() {

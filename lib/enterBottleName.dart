@@ -2,9 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EnterBottleName extends StatefulWidget {
-  EnterBottleName({this.choice});
+  EnterBottleName({this.choice, this.bottleNameController});
 
   final String choice;
+  final TextEditingController bottleNameController;
   @override
   _EnterBottleNameState createState() => _EnterBottleNameState();
 }
@@ -40,7 +41,7 @@ class _EnterBottleNameState extends State<EnterBottleName> {
               ),
               Expanded(
                 child: CupertinoTextField(
-                  //controller: bottleNameController,
+                  controller: widget.bottleNameController,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border(
