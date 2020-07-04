@@ -11,6 +11,7 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: add check for bottle name/data
     if (sharedPreferences == null) {
       return InitialQuestions();
     }
