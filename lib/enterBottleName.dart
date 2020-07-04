@@ -30,7 +30,7 @@ class _EnterBottleNameState extends State<EnterBottleName> {
                       size: 100,
                       color: Colors.blue,
                     ),
-                    Text('32 oz'),
+                    Text(widget.choice),
                   ],
                 ),
               ),

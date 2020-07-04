@@ -33,7 +33,10 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                 index: questionViewIndex,
                 children: <Widget>[
                   selectBottleSize(),
-                  Center(child: EnterBottleName()),
+                  Center(
+                      child: EnterBottleName(
+                    choice: getChoice(),
+                  )),
                 ],
               ),
             ),
@@ -46,11 +49,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                 children: <Widget>[
                   if (questionViewIndex != 0)
                     CupertinoButton(
-                      onPressed: () => bottleSizeSelected[0] ||
-                              bottleSizeSelected[1] ||
-                              bottleSizeSelected[2]
-                          ? setState(() => questionViewIndex = 0)
-                          : null,
+                      onPressed: () => setState(() => questionViewIndex = 0),
                       padding: EdgeInsets.all(0),
                       child: Text('Back'),
                     ),
@@ -84,7 +83,9 @@ class _InitialQuestionsState extends State<InitialQuestions> {
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
           CupertinoButton(
-            onPressed: () => print('water'),
+            onPressed: () => setState(() {
+              questionViewIndex = 1;
+            }),
             padding: EdgeInsets.all(0),
             child: Text(
               'Or use a default glass of water.',
@@ -200,5 +201,18 @@ class _InitialQuestionsState extends State<InitialQuestions> {
       default:
         break;
     }
+  }
+
+  getChoice() {
+    if (bottleSizeSelected[0]) {
+      return '16 oz';
+    }
+    if (bottleSizeSelected[1]) {
+      return '24 oz';
+    }
+    if (bottleSizeSelected[2]) {
+      return '32 oz';
+    }
+    return 'Glass of water';
   }
 }
