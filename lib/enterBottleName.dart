@@ -17,6 +17,10 @@ class _EnterBottleNameState extends State<EnterBottleName> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          Text(
+            'Enter a nickname for your bottle.',
+            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
@@ -36,7 +40,21 @@ class _EnterBottleNameState extends State<EnterBottleName> {
               ),
               Expanded(
                 child: CupertinoTextField(
-                  placeholder: "Ex: Blue Hydroflask",
+                  //controller: bottleNameController,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                        bottom: BorderSide(color: Colors.blue, width: 1)),
+                  ),
+                  textAlignVertical: TextAlignVertical.center,
+                  textInputAction: TextInputAction.done,
+                  maxLines: 1,
+                  minLines: 1,
+                  placeholder: 'Ex: Blue Hydroflask',
+                  placeholderStyle: TextStyle(color: Colors.black54),
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
                 ),
               )
             ],
