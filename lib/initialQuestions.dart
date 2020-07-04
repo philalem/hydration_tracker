@@ -25,11 +25,47 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       child: SafeArea(
-        child: AnimatedIndexedStack(
-          index: questionViewIndex,
+        child: Stack(
           children: <Widget>[
-            selectBottleSize(),
-            EnterBottleName(),
+            Align(
+              alignment: Alignment.center,
+              child: AnimatedIndexedStack(
+                index: questionViewIndex,
+                children: <Widget>[
+                  selectBottleSize(),
+                  Center(child: EnterBottleName()),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 20,
+              right: 20,
+              left: 20,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  if (questionViewIndex != 0)
+                    CupertinoButton(
+                      onPressed: () => bottleSizeSelected[0] ||
+                              bottleSizeSelected[1] ||
+                              bottleSizeSelected[2]
+                          ? setState(() => questionViewIndex = 0)
+                          : null,
+                      padding: EdgeInsets.all(0),
+                      child: Text('Back'),
+                    ),
+                  CupertinoButton(
+                    onPressed: () => bottleSizeSelected[0] ||
+                            bottleSizeSelected[1] ||
+                            bottleSizeSelected[2]
+                        ? setState(() => questionViewIndex = 1)
+                        : null,
+                    padding: EdgeInsets.all(0),
+                    child: Text('Next'),
+                  )
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -62,20 +98,6 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           SizedBox(
             height: 20,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              CupertinoButton(
-                onPressed: () => bottleSizeSelected[0] ||
-                        bottleSizeSelected[1] ||
-                        bottleSizeSelected[2]
-                    ? setState(() => questionViewIndex = 1)
-                    : null,
-                padding: EdgeInsets.all(0),
-                child: Text('Next'),
-              )
-            ],
-          )
         ],
       ),
     );

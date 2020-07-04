@@ -16,7 +16,6 @@ class _EnterBottleNameState extends State<EnterBottleName> {
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -39,22 +38,6 @@ class _EnterBottleNameState extends State<EnterBottleName> {
                 child: CupertinoTextField(
                   placeholder: "Ex: Blue Hydroflask",
                 ),
-              )
-            ],
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              CupertinoButton(
-                padding: EdgeInsets.all(0),
-                child: Text('Back'),
-              ),
-              CupertinoButton(
-                padding: EdgeInsets.all(0),
-                child: Text('Next'),
               )
             ],
           ),
