@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:simple_animations/simple_animations.dart';
+
+const _duration = Duration(milliseconds: 400);
 
 class Home extends StatefulWidget {
   Home({Key key, this.title}) : super(key: key);
@@ -14,11 +18,18 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isShowingMainData;
+  Widget animatedChild;
+  bool ableToPress = true;
 
   @override
   void initState() {
+    animatedChild = Text(
+      'Add',
+      style: TextStyle(
+        color: Colors.white,
+      ),
+    );
     super.initState();
-    isShowingMainData = true;
   }
 
   @override
@@ -48,7 +59,7 @@ class _HomeState extends State<Home> {
                           FittedBox(
                             fit: BoxFit.contain,
                             child: Text(
-                              'Your daily water intake',
+                              'Today\'s water intake',
                               style: TextStyle(
                                   fontSize: 24, fontWeight: FontWeight.bold),
                             ),
@@ -76,13 +87,44 @@ class _HomeState extends State<Home> {
                       SizedBox(
                         height: 20,
                       ),
-                      CupertinoButton(
-                        color: Colors.blue,
-                        onPressed: () => print('Added water'),
-                        child: Text('Add your Hydroflask'),
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          'Add your Hydroflask to your daily intake',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
                       ),
                       SizedBox(
-                        height: 15,
+                        height: 20,
+                      ),
+                      CupertinoButton(
+                        color: Colors.blue,
+                        onPressed: () async {
+                          if (ableToPress) {
+                            setState(() {
+                              ableToPress = false;
+                              animatedChild = Icon(
+                                Icons.check,
+                                size: 20,
+                              );
+                            });
+                            switchBackAfterThreeSeconds();
+                          }
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            AnimatedSwitcher(
+                              child: animatedChild,
+                              duration: _duration,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
                       ),
                       CupertinoButton(
                         padding: EdgeInsets.zero,
@@ -165,6 +207,19 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
+  }
+
+  Future switchBackAfterThreeSeconds() async {
+    await Future.delayed(const Duration(seconds: 5));
+    setState(() {
+      animatedChild = Text(
+        'Add',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      );
+      ableToPress = true;
+    });
   }
 
   LineChartData sampleData1() {

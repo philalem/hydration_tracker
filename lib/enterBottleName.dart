@@ -51,6 +51,7 @@ class _EnterBottleNameState extends State<EnterBottleName> {
                   textInputAction: TextInputAction.done,
                   maxLines: 1,
                   minLines: 1,
+                  maxLength: 30,
                   placeholder: 'Ex: Blue Hydroflask',
                   placeholderStyle: TextStyle(color: Colors.black54),
                   style: TextStyle(
