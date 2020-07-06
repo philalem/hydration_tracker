@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 class Home extends StatefulWidget {
@@ -22,110 +23,165 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    double width = size.width;
     return CupertinoPageScaffold(
-      child: AspectRatio(
-        aspectRatio: 1.23,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(18)),
-            gradient: LinearGradient(
-              colors: const [
-                Color(0xff2c274c),
-                Color(0xff46426c),
+      child: CustomScrollView(
+        slivers: <Widget>[
+          CupertinoSliverNavigationBar(
+            largeTitle: Text('Dashboard'),
+            backgroundColor: Colors.transparent,
+          ),
+          SliverFillRemaining(
+            hasScrollBody: true,
+            child: ListView(
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              'Your daily water intake',
+                              style: TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CircularPercentIndicator(
+                        radius: width - 160,
+                        animation: true,
+                        animationDuration: 1200,
+                        lineWidth: 15.0,
+                        percent: 0.4,
+                        center: Text(
+                          "40 / 104 oz",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 32.0),
+                        ),
+                        circularStrokeCap: CircularStrokeCap.butt,
+                        backgroundColor: Colors.grey,
+                        progressColor: Colors.blue,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      CupertinoButton(
+                        color: Colors.blue,
+                        onPressed: () => print('Added water'),
+                        child: Text('Add your Hydroflask'),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      CupertinoButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: () => print('Added specific water'),
+                        child: Text(
+                          'Or add or remove a specific amount',
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      AspectRatio(
+                        aspectRatio: 1.23,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(18)),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.blue[600],
+                                Colors.blue,
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                            ),
+                          ),
+                          child: Stack(
+                            children: <Widget>[
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  const SizedBox(
+                                    height: 37,
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 30),
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(
+                                        'Water Intake Over Time',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 2),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 37,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 16.0, left: 6.0),
+                                      child: LineChart(
+                                        sampleData1(),
+                                        swapAnimationDuration:
+                                            const Duration(milliseconds: 250),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
             ),
           ),
-          child: Stack(
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  const SizedBox(
-                    height: 37,
-                  ),
-                  const Text(
-                    'Unfold Shop 2018',
-                    style: TextStyle(
-                      color: Color(0xff827daa),
-                      fontSize: 16,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  const Text(
-                    'Monthly Sales',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 37,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 16.0, left: 6.0),
-                      child: LineChart(
-                        sampleData1(),
-                        swapAnimationDuration:
-                            const Duration(milliseconds: 250),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
 
-// @override
-// Widget build(BuildContext context) {
-//   return CupertinoPageScaffold(
-//     navigationBar: CupertinoNavigationBar(),
-//     child: SafeArea(
-//       child: Padding(
-//         padding: const EdgeInsets.all(20.0),
-//         child: Column(
-//           children: <Widget>[
-//             Text(
-//               'Your daily water intake',
-//               style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-//             ),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//               children: <Widget>[
-//                 Bar(0.3, "2013"),
-//                 Bar(0.5, "2014"),
-//                 Bar(0.7, "2015"),
-//                 Bar(0.8, "2016"),
-//                 Bar(0.9, "2017"),
-//                 Bar(0.98, "2018"),
-//                 Bar(0.84, "2019"),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     ),
-//   );
-// }
-// }
   LineChartData sampleData1() {
     return LineChartData(
       extraLinesData: ExtraLinesData(horizontalLines: [
         HorizontalLine(
+          dashArray: [5],
+          label: HorizontalLineLabel(
+            style: TextStyle(
+              color: Colors.amber,
+              fontSize: 18,
+            ),
+            labelResolver: (_) => "Goal",
+            alignment: Alignment.topLeft,
+            show: true,
+          ),
+          color: Colors.amber,
           y: 3,
         )
       ]),
@@ -143,8 +199,8 @@ class _HomeState extends State<Home> {
         bottomTitles: SideTitles(
           showTitles: true,
           reservedSize: 22,
-          textStyle: const TextStyle(
-            color: Color(0xff72719b),
+          textStyle: TextStyle(
+            color: Colors.grey[200],
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
@@ -163,8 +219,8 @@ class _HomeState extends State<Home> {
         ),
         leftTitles: SideTitles(
           showTitles: true,
-          textStyle: const TextStyle(
-            color: Color(0xff75729e),
+          textStyle: TextStyle(
+            color: Colors.grey[200],
             fontWeight: FontWeight.bold,
             fontSize: 14,
           ),
@@ -187,9 +243,9 @@ class _HomeState extends State<Home> {
       ),
       borderData: FlBorderData(
         show: true,
-        border: const Border(
+        border: Border(
           bottom: BorderSide(
-            color: Color(0xff4e4965),
+            color: Colors.grey[400],
             width: 4,
           ),
           left: BorderSide(
@@ -224,50 +280,7 @@ class _HomeState extends State<Home> {
       ],
       isCurved: true,
       colors: [
-        const Color(0xff4af699),
-      ],
-      barWidth: 8,
-      isStrokeCapRound: true,
-      dotData: FlDotData(
-        show: false,
-      ),
-      belowBarData: BarAreaData(
-        show: false,
-      ),
-    );
-    final LineChartBarData lineChartBarData2 = LineChartBarData(
-      spots: [
-        FlSpot(1, 1),
-        FlSpot(3, 2.8),
-        FlSpot(7, 1.2),
-        FlSpot(10, 2.8),
-        FlSpot(12, 2.6),
-        FlSpot(13, 3.9),
-      ],
-      isCurved: true,
-      colors: [
-        const Color(0xffaa4cfc),
-      ],
-      barWidth: 8,
-      isStrokeCapRound: true,
-      dotData: FlDotData(
-        show: false,
-      ),
-      belowBarData: BarAreaData(show: false, colors: [
-        const Color(0x00aa4cfc),
-      ]),
-    );
-    final LineChartBarData lineChartBarData3 = LineChartBarData(
-      spots: [
-        FlSpot(1, 2.8),
-        FlSpot(3, 1.9),
-        FlSpot(6, 3),
-        FlSpot(10, 1.3),
-        FlSpot(13, 2.5),
-      ],
-      isCurved: true,
-      colors: const [
-        Color(0xff27b6fc),
+        Colors.grey[200],
       ],
       barWidth: 8,
       isStrokeCapRound: true,
@@ -280,8 +293,6 @@ class _HomeState extends State<Home> {
     );
     return [
       lineChartBarData1,
-      lineChartBarData2,
-      lineChartBarData3,
     ];
   }
 }
