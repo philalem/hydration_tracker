@@ -18,16 +18,24 @@ class _HomeState extends State<Home> {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: Column(
             children: <Widget>[
-              Bar(0.3, "2013"),
-              Bar(0.5, "2014"),
-              Bar(0.7, "2015"),
-              Bar(0.8, "2016"),
-              Bar(0.9, "2017"),
-              Bar(0.98, "2018"),
-              Bar(0.84, "2019"),
+              Text(
+                'Your daily water intake',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Bar(0.3, "2013"),
+                  Bar(0.5, "2014"),
+                  Bar(0.7, "2015"),
+                  Bar(0.8, "2016"),
+                  Bar(0.9, "2017"),
+                  Bar(0.98, "2018"),
+                  Bar(0.84, "2019"),
+                ],
+              ),
             ],
           ),
         ),
