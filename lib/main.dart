@@ -4,13 +4,13 @@ import 'package:hydration_tracker/initialQuestions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  var sharedPreferences = await SharedPreferences.getInstance();
+  //var sharedPreferences = await SharedPreferences.getInstance();
   // runApp(Wrapper(
   //   sharedPreferences: sharedPreferences,
   // ));
   runApp(HydrationTracker(
-    sharedPreferences: sharedPreferences,
-  ));
+      // sharedPreferences: sharedPreferences,
+      ));
 }
 
 class HydrationTracker extends StatelessWidget {
