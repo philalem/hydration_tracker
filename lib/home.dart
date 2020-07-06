@@ -20,6 +20,7 @@ class _HomeState extends State<Home> {
   bool isShowingMainData;
   Widget animatedChild;
   bool ableToPress = true;
+  double dailyAmount = 0;
 
   @override
   void initState() {
@@ -73,12 +74,19 @@ class _HomeState extends State<Home> {
                         radius: width - 160,
                         animation: true,
                         animationDuration: 1200,
+                        animateFromLastPercent: true,
                         lineWidth: 15.0,
-                        percent: 0.4,
-                        center: Text(
-                          "40 / 104 oz",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 32.0),
+                        percent: dailyAmount / 104 > 1 ? 1 : dailyAmount / 104,
+                        center: Container(
+                          width: width - 200,
+                          child: FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              "${dailyAmount.toString()} / 104 oz",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 32.0),
+                            ),
+                          ),
                         ),
                         circularStrokeCap: CircularStrokeCap.butt,
                         backgroundColor: Colors.grey,
@@ -104,6 +112,7 @@ class _HomeState extends State<Home> {
                         onPressed: () async {
                           if (ableToPress) {
                             setState(() {
+                              dailyAmount += 32;
                               ableToPress = false;
                               animatedChild = Icon(
                                 Icons.check,
@@ -157,7 +166,7 @@ class _HomeState extends State<Home> {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
                                   const SizedBox(
-                                    height: 37,
+                                    height: 20,
                                   ),
                                   Container(
                                     margin:
@@ -210,7 +219,7 @@ class _HomeState extends State<Home> {
   }
 
   Future switchBackAfterThreeSeconds() async {
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 3));
     setState(() {
       animatedChild = Text(
         'Add',
