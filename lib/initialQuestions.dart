@@ -54,13 +54,13 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                   if (questionViewIndex != 0)
                     CupertinoButton(
                       onPressed: () => setState(() => questionViewIndex = 0),
-                      padding: EdgeInsets.all(0),
+                      padding: EdgeInsets.zero,
                       child: Text('Back'),
                     ),
                   CupertinoButton(
                     onPressed: () =>
                         navigateToEditNameOrHome(bottleNameController),
-                    padding: EdgeInsets.all(0),
+                    padding: EdgeInsets.zero,
                     child: Text('Next'),
                   )
                 ],

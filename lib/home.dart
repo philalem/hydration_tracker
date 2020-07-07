@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:fl_chart/fl_chart.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hydration_tracker/addSpecificAmounts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_animations/simple_animations.dart';
 
 const _duration = Duration(milliseconds: 400);
@@ -21,7 +23,8 @@ class _HomeState extends State<Home> {
   bool isShowingMainData;
   Widget animatedChild;
   bool ableToPress = true;
-  double dailyAmount = 0;
+  Map<String, dynamic> todaysAmount;
+  SharedPreferences preferences;
 
   @override
   void initState() {
@@ -33,6 +36,25 @@ class _HomeState extends State<Home> {
     );
     super.initState();
   }
+
+  Future<Map<String, dynamic>> getStoredData() async {
+    preferences = await SharedPreferences.getInstance();
+    DateTime date = DateTime.now();
+    var todaysJsonAmount = preferences.getString('todaysAmount');
+    todaysAmount = todaysJsonAmount == null
+        ? {'amount': 0.0, 'date': date.toIso8601String()}
+        : jsonDecode(todaysJsonAmount);
+    DateTime storedDate =
+        DateTime.parse(restrictFractionalSeconds(todaysAmount['date']));
+    if (date.day != storedDate.day ||
+        date.month != storedDate.month ||
+        date.year != storedDate.year)
+      todaysAmount = {'amount': 0.0, 'date': date.toIso8601String()};
+    return todaysAmount;
+  }
+
+  String restrictFractionalSeconds(String dateTime) =>
+      dateTime.replaceFirstMapped(RegExp("(\\.\\d{6})\\d+"), (m) => m[1]);
 
   @override
   Widget build(BuildContext context) {
@@ -50,176 +72,200 @@ class _HomeState extends State<Home> {
             child: ListView(
               physics: NeverScrollableScrollPhysics(),
               children: <Widget>[
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              'Today\'s water intake',
-                              style: TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      CircularPercentIndicator(
-                        radius: width - 160,
-                        animation: true,
-                        animationDuration: 1200,
-                        animateFromLastPercent: true,
-                        lineWidth: 15.0,
-                        percent: dailyAmount / 104 > 1 ? 1 : dailyAmount / 104,
-                        center: Container(
-                          width: width - 200,
-                          child: FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              "${dailyAmount.toString()} / 104 oz",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 32.0),
-                            ),
-                          ),
-                        ),
-                        circularStrokeCap: CircularStrokeCap.butt,
-                        backgroundColor: Colors.grey,
-                        progressColor: Colors.blue,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      FittedBox(
-                        fit: BoxFit.contain,
-                        child: Text(
-                          'Add your Hydroflask to your daily intake',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      CupertinoButton(
-                        color: Colors.blue,
-                        onPressed: () async {
-                          if (ableToPress) {
-                            setState(() {
-                              dailyAmount += 32;
-                              ableToPress = false;
-                              animatedChild = Icon(
-                                Icons.check,
-                                size: 20,
-                              );
-                            });
-                            switchBackAfterThreeSeconds();
-                          }
-                        },
-                        child: Row(
+                FutureBuilder(
+                    future: getStoredData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return Align(
+                          alignment: Alignment.center,
+                          child: CupertinoActivityIndicator(),
+                        );
+                      }
+                      return Container(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            AnimatedSwitcher(
-                              child: animatedChild,
-                              duration: _duration,
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      CupertinoButton(
-                        padding: EdgeInsets.zero,
-                        onPressed: () =>
-                            Navigator.of(context).push(CupertinoPageRoute(
-                          builder: (context) => AddSpecificAmount(),
-                        )),
-                        child: Text(
-                          'Or add or remove a specific amount',
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      AspectRatio(
-                        aspectRatio: 1.23,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(18)),
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.blue[600],
-                                Colors.blue,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text(
+                                    'Today\'s water intake',
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               ],
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
                             ),
-                          ),
-                          child: Stack(
-                            children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                            SizedBox(
+                              height: 20,
+                            ),
+                            CircularPercentIndicator(
+                              radius: width - 160,
+                              animation: true,
+                              animationDuration: 1200,
+                              animateFromLastPercent: true,
+                              lineWidth: 15.0,
+                              percent: getPercent(),
+                              center: Container(
+                                width: width - 200,
+                                child: FittedBox(
+                                  fit: BoxFit.contain,
+                                  child: Text(
+                                    "${todaysAmount['amount'].toString()} / 104 oz",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 32.0),
+                                  ),
+                                ),
+                              ),
+                              circularStrokeCap: CircularStrokeCap.butt,
+                              backgroundColor: Colors.grey,
+                              progressColor: Colors.blue,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                'Add your Hydroflask to your daily intake',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            CupertinoButton(
+                              color: Colors.blue,
+                              onPressed: () async {
+                                if (ableToPress) {
+                                  setState(() {
+                                    todaysAmount['amount'] += 32;
+                                    ableToPress = false;
+                                    animatedChild = Icon(
+                                      Icons.check,
+                                      size: 20,
+                                    );
+                                  });
+                                  preferences.setString(
+                                      'todaysAmount', jsonEncode(todaysAmount));
+                                  switchBackAfterThreeSeconds();
+                                }
+                              },
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 30),
-                                    child: FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        'Water Intake Over Time',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 32,
-                                            fontWeight: FontWeight.bold,
-                                            letterSpacing: 2),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 37,
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: 16.0, left: 6.0),
-                                      child: LineChart(
-                                        sampleData1(),
-                                        swapAnimationDuration:
-                                            const Duration(milliseconds: 250),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
+                                  AnimatedSwitcher(
+                                    child: animatedChild,
+                                    duration: _duration,
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            CupertinoButton(
+                              padding: EdgeInsets.zero,
+                              onPressed: () =>
+                                  Navigator.of(context).push(CupertinoPageRoute(
+                                builder: (context) => AddSpecificAmount(),
+                              )),
+                              child: Text(
+                                'Or add a another amount',
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            AspectRatio(
+                              aspectRatio: 1.23,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(18)),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.blue[600],
+                                      Colors.blue,
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                  ),
+                                ),
+                                child: Stack(
+                                  children: <Widget>[
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
+                                      children: <Widget>[
+                                        const SizedBox(
+                                          height: 20,
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: 30),
+                                          child: FittedBox(
+                                            fit: BoxFit.contain,
+                                            child: Text(
+                                              'Water Intake Over Time',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 32,
+                                                  fontWeight: FontWeight.bold,
+                                                  letterSpacing: 2),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 37,
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 16.0, left: 6.0),
+                                            child: LineChart(
+                                              sampleData1(),
+                                              swapAnimationDuration:
+                                                  const Duration(
+                                                      milliseconds: 250),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                ),
+                      );
+                    }),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  double getPercent() {
+    if (todaysAmount != null)
+      return todaysAmount['amount'] / 104 > 1
+          ? 1.0
+          : todaysAmount['amount'] / 104;
+    return 0.0;
   }
 
   Future switchBackAfterThreeSeconds() async {
