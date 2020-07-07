@@ -88,6 +88,18 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
             height: 10,
           ),
           CupertinoTextField(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(bottom: BorderSide(color: Colors.blue, width: 1)),
+            ),
+            autofocus: false,
+            textInputAction: TextInputAction.done,
+            maxLines: 1,
+            minLines: 1,
+            placeholderStyle: TextStyle(color: Colors.black54),
+            style: TextStyle(
+              color: Colors.black,
+            ),
             enabled: enabled,
             controller: enteredAmount,
             keyboardType: TextInputType.numberWithOptions(
