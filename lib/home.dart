@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +24,7 @@ class _HomeState extends State<Home> {
   bool ableToPress = true;
   Map<String, dynamic> todaysAmount;
   SharedPreferences preferences;
+  double percent = 0.0;
 
   @override
   void initState() {
@@ -50,6 +50,8 @@ class _HomeState extends State<Home> {
         date.month != storedDate.month ||
         date.year != storedDate.year)
       todaysAmount = {'amount': 0.0, 'date': date.toIso8601String()};
+    percent =
+        todaysAmount['amount'] / 104 > 1 ? 1.0 : todaysAmount['amount'] / 104;
     return todaysAmount;
   }
 
@@ -109,7 +111,7 @@ class _HomeState extends State<Home> {
                               animationDuration: 1200,
                               animateFromLastPercent: true,
                               lineWidth: 15.0,
-                              percent: getPercent(),
+                              percent: percent,
                               center: Container(
                                 width: width - 200,
                                 child: FittedBox(
@@ -147,6 +149,9 @@ class _HomeState extends State<Home> {
                                 if (ableToPress) {
                                   setState(() {
                                     todaysAmount['amount'] += 32;
+                                    percent = todaysAmount['amount'] / 104 > 1
+                                        ? 1.0
+                                        : todaysAmount['amount'] / 104;
                                     ableToPress = false;
                                     animatedChild = Icon(
                                       Icons.check,
@@ -173,10 +178,14 @@ class _HomeState extends State<Home> {
                             ),
                             CupertinoButton(
                               padding: EdgeInsets.zero,
-                              onPressed: () =>
-                                  Navigator.of(context).push(CupertinoPageRoute(
-                                builder: (context) => AddSpecificAmount(),
-                              )),
+                              onPressed: () => Navigator.of(context)
+                                  .push(CupertinoPageRoute(
+                                    builder: (context) => AddSpecificAmount(
+                                      todaysAmount: todaysAmount,
+                                    ),
+                                  ))
+                                  .then((value) => setState(() => print(
+                                      'Refreshing page after pop back over.'))),
                               child: Text(
                                 'Or add a another amount',
                               ),
@@ -258,14 +267,6 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
-  }
-
-  double getPercent() {
-    if (todaysAmount != null)
-      return todaysAmount['amount'] / 104 > 1
-          ? 1.0
-          : todaysAmount['amount'] / 104;
-    return 0.0;
   }
 
   Future switchBackAfterThreeSeconds() async {
