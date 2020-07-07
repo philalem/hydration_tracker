@@ -85,8 +85,8 @@ class _InitialQuestionsState extends State<InitialQuestions> {
       preferences.setString(
           'bottleInfo',
           jsonEncode({
-            'bottleName': bottleNameController.text,
-            'size': amountSelected,
+            'name': bottleNameController.text,
+            'amount': amountSelected,
           }));
       Navigator.of(context).push(CupertinoPageRoute(
         builder: (context) => Home(),
@@ -159,7 +159,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     MyFlutterApp.water_bottle,
                     size: 140,
                     color:
-                        bottleSizeSelected[0] ? Colors.blue : Colors.grey[300],
+                        bottleSizeSelected[1] ? Colors.blue : Colors.grey[300],
                   ),
                   Text('16 oz'),
                 ],
@@ -180,7 +180,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     MyFlutterApp.water_bottle,
                     size: 170,
                     color:
-                        bottleSizeSelected[1] ? Colors.blue : Colors.grey[300],
+                        bottleSizeSelected[2] ? Colors.blue : Colors.grey[300],
                   ),
                   Text('24 oz'),
                 ],
@@ -201,7 +201,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     MyFlutterApp.water_bottle,
                     size: 200,
                     color:
-                        bottleSizeSelected[2] ? Colors.blue : Colors.grey[300],
+                        bottleSizeSelected[3] ? Colors.blue : Colors.grey[300],
                   ),
                   Text('32 oz'),
                 ],

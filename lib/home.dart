@@ -23,6 +23,7 @@ class _HomeState extends State<Home> {
   Widget animatedChild;
   bool ableToPress = true;
   Map<String, dynamic> todaysAmount;
+  Map<String, dynamic> bottleInfo;
   SharedPreferences preferences;
   double percent = 0.0;
 
@@ -52,6 +53,7 @@ class _HomeState extends State<Home> {
       todaysAmount = {'amount': 0.0, 'date': date.toIso8601String()};
     percent =
         todaysAmount['amount'] / 104 > 1 ? 1.0 : todaysAmount['amount'] / 104;
+    bottleInfo = jsonDecode(preferences.getString('bottleInfo'));
     return todaysAmount;
   }
 
@@ -134,7 +136,7 @@ class _HomeState extends State<Home> {
                             FittedBox(
                               fit: BoxFit.contain,
                               child: Text(
-                                'Add your Hydroflask to your daily intake',
+                                'Add your ${bottleInfo['name']} to your daily intake',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
@@ -148,7 +150,8 @@ class _HomeState extends State<Home> {
                               onPressed: () async {
                                 if (ableToPress) {
                                   setState(() {
-                                    todaysAmount['amount'] += 32;
+                                    todaysAmount['amount'] +=
+                                        bottleInfo['amount'];
                                     percent = todaysAmount['amount'] / 104 > 1
                                         ? 1.0
                                         : todaysAmount['amount'] / 104;
