@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hydration_tracker/animatedIndexedStack.dart';
 import 'package:hydration_tracker/enterBottleName.dart';
+import 'package:hydration_tracker/glass_of_water_icons.dart';
 import 'package:hydration_tracker/home.dart';
 import 'package:hydration_tracker/my_flutter_app_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialQuestions extends StatefulWidget {
   InitialQuestions();
@@ -13,9 +17,10 @@ class InitialQuestions extends StatefulWidget {
 }
 
 class _InitialQuestionsState extends State<InitialQuestions> {
-  List<bool> bottleSizeSelected = [false, false, false];
+  List<bool> bottleSizeSelected = [false, false, false, false];
   int questionViewIndex = 0;
   Widget questionView;
+  double amountSelected = 0;
 
   @override
   void initState() {
@@ -72,10 +77,17 @@ class _InitialQuestionsState extends State<InitialQuestions> {
     );
   }
 
-  void navigateToEditNameOrHome(bottleNameController) {
+  void navigateToEditNameOrHome(bottleNameController) async {
     if (bottleNameController.text != null &&
         bottleNameController.text != '' &&
         questionViewIndex == 1) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString(
+          'bottleInfo',
+          jsonEncode({
+            'bottleName': bottleNameController.text,
+            'size': amountSelected,
+          }));
       Navigator.of(context).push(CupertinoPageRoute(
         builder: (context) => Home(),
       ));
@@ -96,17 +108,6 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           Text(
             'What size water bottle do you use most?',
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-          ),
-          CupertinoButton(
-            onPressed: () => setState(() {
-              bottleSizeSelected = [false, false, false, false];
-              questionViewIndex = 1;
-            }),
-            padding: EdgeInsets.all(0),
-            child: Text(
-              'Or use a default glass of water.',
-              style: TextStyle(color: Colors.blue),
-            ),
           ),
           SizedBox(
             height: 10,
@@ -134,6 +135,27 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Icon(
+                    GlassOfWater.glassofwater,
+                    size: 100,
+                    color:
+                        bottleSizeSelected[0] ? Colors.blue : Colors.grey[300],
+                  ),
+                  Text('8 oz'),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.all(5),
+            child: CupertinoButton(
+              onPressed: () => _updateBottleSelection(1),
+              padding: EdgeInsets.all(0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
                     MyFlutterApp.water_bottle,
                     size: 140,
                     color:
@@ -149,7 +171,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           child: Container(
             margin: EdgeInsets.all(5),
             child: CupertinoButton(
-              onPressed: () => _updateBottleSelection(1),
+              onPressed: () => _updateBottleSelection(2),
               padding: EdgeInsets.all(0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -170,7 +192,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           child: Container(
             margin: EdgeInsets.all(5),
             child: CupertinoButton(
-              onPressed: () => _updateBottleSelection(2),
+              onPressed: () => _updateBottleSelection(3),
               padding: EdgeInsets.all(0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -198,6 +220,12 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[0] = !bottleSizeSelected[0];
           bottleSizeSelected[1] = false;
           bottleSizeSelected[2] = false;
+          bottleSizeSelected[3] = false;
+          if (bottleSizeSelected[0]) {
+            amountSelected = 8;
+          } else {
+            amountSelected = 0;
+          }
         });
         break;
       case 1:
@@ -205,6 +233,12 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[0] = false;
           bottleSizeSelected[1] = !bottleSizeSelected[1];
           bottleSizeSelected[2] = false;
+          bottleSizeSelected[3] = false;
+          if (bottleSizeSelected[1]) {
+            amountSelected = 16;
+          } else {
+            amountSelected = 0;
+          }
         });
         break;
       case 2:
@@ -212,6 +246,25 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[0] = false;
           bottleSizeSelected[1] = false;
           bottleSizeSelected[2] = !bottleSizeSelected[2];
+          bottleSizeSelected[3] = false;
+          if (bottleSizeSelected[2]) {
+            amountSelected = 24;
+          } else {
+            amountSelected = 0;
+          }
+        });
+        break;
+      case 3:
+        setState(() {
+          bottleSizeSelected[0] = false;
+          bottleSizeSelected[1] = false;
+          bottleSizeSelected[2] = false;
+          bottleSizeSelected[3] = !bottleSizeSelected[3];
+          if (bottleSizeSelected[3]) {
+            amountSelected = 32;
+          } else {
+            amountSelected = 0;
+          }
         });
         break;
       default:
@@ -221,12 +274,15 @@ class _InitialQuestionsState extends State<InitialQuestions> {
 
   getChoice() {
     if (bottleSizeSelected[0]) {
-      return '16 oz';
+      return 'Glass of water';
     }
     if (bottleSizeSelected[1]) {
-      return '24 oz';
+      return '16 oz';
     }
     if (bottleSizeSelected[2]) {
+      return '24 oz';
+    }
+    if (bottleSizeSelected[3]) {
       return '32 oz';
     }
     return 'Glass of water';

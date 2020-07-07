@@ -262,6 +262,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
           bottleSizeSelected[2] = false;
           bottleSizeSelected[3] = !bottleSizeSelected[3];
           if (bottleSizeSelected[3]) {
+            amountSelected = 32;
             enabled = false;
           } else {
             amountSelected = 0;
@@ -272,19 +273,6 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
       default:
         break;
     }
-  }
-
-  getChoice() {
-    if (bottleSizeSelected[0]) {
-      return '16 oz';
-    }
-    if (bottleSizeSelected[1]) {
-      return '24 oz';
-    }
-    if (bottleSizeSelected[2]) {
-      return '32 oz';
-    }
-    return 'Glass of water';
   }
 }
 
