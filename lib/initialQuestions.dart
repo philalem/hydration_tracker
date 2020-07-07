@@ -99,6 +99,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           ),
           CupertinoButton(
             onPressed: () => setState(() {
+              bottleSizeSelected = [false, false, false, false];
               questionViewIndex = 1;
             }),
             padding: EdgeInsets.all(0),
