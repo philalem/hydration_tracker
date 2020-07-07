@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hydration_tracker/addSpecificAmounts.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:simple_animations/simple_animations.dart';
 
@@ -137,7 +138,10 @@ class _HomeState extends State<Home> {
                       ),
                       CupertinoButton(
                         padding: EdgeInsets.zero,
-                        onPressed: () => print('Added specific water'),
+                        onPressed: () =>
+                            Navigator.of(context).push(CupertinoPageRoute(
+                          builder: (context) => AddSpecificAmount(),
+                        )),
                         child: Text(
                           'Or add or remove a specific amount',
                         ),

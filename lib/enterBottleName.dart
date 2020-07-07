@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hydration_tracker/glass_of_water_icons.dart';
+import 'package:hydration_tracker/my_flutter_app_icons.dart';
 
 class EnterBottleName extends StatefulWidget {
   EnterBottleName({this.choice, this.bottleNameController});
@@ -31,7 +33,9 @@ class _EnterBottleNameState extends State<EnterBottleName> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Icon(
-                      CupertinoIcons.add,
+                      widget.choice == 'Glass of water'
+                          ? GlassOfWater.glassofwater
+                          : MyFlutterApp.water_bottle,
                       size: 100,
                       color: Colors.blue,
                     ),

@@ -1,19 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hydration_tracker/animatedIndexedStack.dart';
-import 'package:hydration_tracker/enterBottleName.dart';
-import 'package:hydration_tracker/home.dart';
+import 'package:hydration_tracker/glass_of_water_icons.dart';
 import 'package:hydration_tracker/my_flutter_app_icons.dart';
 
-class InitialQuestions extends StatefulWidget {
-  InitialQuestions();
-
+class AddSpecificAmount extends StatefulWidget {
   @override
-  _InitialQuestionsState createState() => _InitialQuestionsState();
+  _AddSpecificAmountState createState() => _AddSpecificAmountState();
 }
 
-class _InitialQuestionsState extends State<InitialQuestions> {
-  List<bool> bottleSizeSelected = [false, false, false];
+class _AddSpecificAmountState extends State<AddSpecificAmount> {
+  List<bool> bottleSizeSelected = [false, false, false, false];
   int questionViewIndex = 0;
   Widget questionView;
 
@@ -27,63 +23,19 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   Widget build(BuildContext context) {
     TextEditingController bottleNameController = TextEditingController();
     return CupertinoPageScaffold(
-      child: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.center,
-              child: AnimatedIndexedStack(
-                index: questionViewIndex,
-                children: <Widget>[
-                  selectBottleSize(),
-                  Center(
-                      child: EnterBottleName(
-                    choice: getChoice(),
-                    bottleNameController: bottleNameController,
-                  )),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: 20,
-              right: 20,
-              left: 20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  if (questionViewIndex != 0)
-                    CupertinoButton(
-                      onPressed: () => setState(() => questionViewIndex = 0),
-                      padding: EdgeInsets.all(0),
-                      child: Text('Back'),
-                    ),
-                  CupertinoButton(
-                    onPressed: () =>
-                        navigateToEditNameOrHome(bottleNameController),
-                    padding: EdgeInsets.all(0),
-                    child: Text('Next'),
-                  )
-                ],
-              ),
-            ),
-          ],
+      navigationBar: CupertinoNavigationBar(
+        backgroundColor: Colors.transparent,
+        middle: Text('Add a specific amount of water'),
+        trailing: CupertinoButton(
+          onPressed: () => print('Save pressed'),
+          padding: EdgeInsets.zero,
+          child: Text('Save'),
         ),
       ),
+      child: SafeArea(
+        child: selectBottleSize(),
+      ),
     );
-  }
-
-  void navigateToEditNameOrHome(bottleNameController) {
-    if (bottleNameController.text != null &&
-        bottleNameController.text != '' &&
-        questionViewIndex == 1) {
-      Navigator.of(context).push(CupertinoPageRoute(
-        builder: (context) => Home(),
-      ));
-    } else if (bottleSizeSelected[0] ||
-        bottleSizeSelected[1] ||
-        bottleSizeSelected[2]) {
-      setState(() => questionViewIndex = 1);
-    }
   }
 
   Container selectBottleSize() {
@@ -91,21 +43,13 @@ class _InitialQuestionsState extends State<InitialQuestions> {
       padding: EdgeInsets.symmetric(horizontal: 40),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text(
-            'What size water bottle do you use most?',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          SizedBox(
+            height: 10,
           ),
-          CupertinoButton(
-            onPressed: () => setState(() {
-              questionViewIndex = 1;
-            }),
-            padding: EdgeInsets.all(0),
-            child: Text(
-              'Or use a default glass of water.',
-              style: TextStyle(color: Colors.blue),
-            ),
+          Text(
+            'Select a common amount',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 10,
@@ -113,6 +57,16 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeButtons(),
           SizedBox(
             height: 20,
+          ),
+          Text(
+            'Or enter your own',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          CupertinoTextField(
+            placeholder: 'Ex: 12.5s',
           ),
         ],
       ),
@@ -133,12 +87,12 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Icon(
-                    MyFlutterApp.water_bottle,
-                    size: 140,
+                    GlassOfWater.glassofwater,
+                    size: 100,
                     color:
                         bottleSizeSelected[0] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('16 oz'),
+                  Text('8 oz'),
                 ],
               ),
             ),
@@ -155,11 +109,11 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                 children: <Widget>[
                   Icon(
                     MyFlutterApp.water_bottle,
-                    size: 170,
+                    size: 150,
                     color:
                         bottleSizeSelected[1] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('24 oz'),
+                  Text('16 oz'),
                 ],
               ),
             ),
@@ -176,9 +130,30 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                 children: <Widget>[
                   Icon(
                     MyFlutterApp.water_bottle,
-                    size: 200,
+                    size: 170,
                     color:
                         bottleSizeSelected[2] ? Colors.blue : Colors.grey[300],
+                  ),
+                  Text('24 oz'),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.all(5),
+            child: CupertinoButton(
+              onPressed: () => _updateBottleSelection(3),
+              padding: EdgeInsets.all(0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    MyFlutterApp.water_bottle,
+                    size: 200,
+                    color:
+                        bottleSizeSelected[3] ? Colors.blue : Colors.grey[300],
                   ),
                   Text('32 oz'),
                 ],
@@ -197,6 +172,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[0] = !bottleSizeSelected[0];
           bottleSizeSelected[1] = false;
           bottleSizeSelected[2] = false;
+          bottleSizeSelected[3] = false;
         });
         break;
       case 1:
@@ -204,6 +180,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[0] = false;
           bottleSizeSelected[1] = !bottleSizeSelected[1];
           bottleSizeSelected[2] = false;
+          bottleSizeSelected[3] = false;
         });
         break;
       case 2:
@@ -211,6 +188,15 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[0] = false;
           bottleSizeSelected[1] = false;
           bottleSizeSelected[2] = !bottleSizeSelected[2];
+          bottleSizeSelected[3] = false;
+        });
+        break;
+      case 3:
+        setState(() {
+          bottleSizeSelected[0] = false;
+          bottleSizeSelected[1] = false;
+          bottleSizeSelected[2] = false;
+          bottleSizeSelected[3] = !bottleSizeSelected[3];
         });
         break;
       default:
