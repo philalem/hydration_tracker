@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hydration_tracker/addSpecificAmounts.dart';
+import 'package:hydration_tracker/changeBottleNameAndSize.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -88,7 +90,15 @@ class _HomeState extends State<Home> {
             largeTitle: Text('Dashboard'),
             backgroundColor: Colors.transparent,
             trailing: CupertinoButton(
-              onPressed: () => print('pressed the dots'),
+              onPressed: () => Navigator.of(context)
+                  .push(CupertinoPageRoute(
+                    builder: (context) => ChangeBottleNameAndSize(
+                      name: bottleInfo['name'],
+                      size: bottleInfo['amount'],
+                    ),
+                  ))
+                  .then((value) =>
+                      setState(() => print('refreshed after bottle rename'))),
               padding: EdgeInsets.zero,
               child: Icon(
                 threeDots,
