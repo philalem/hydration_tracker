@@ -5,12 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:hydration_tracker/animatedIndexedStack.dart';
 import 'package:hydration_tracker/enterBottleName.dart';
 import 'package:hydration_tracker/glass_of_water_icons.dart';
-import 'package:hydration_tracker/home.dart';
 import 'package:hydration_tracker/my_flutter_app_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InitialQuestions extends StatefulWidget {
-  InitialQuestions();
+  InitialQuestions({this.moveAppIndexToHome});
+
+  final Function moveAppIndexToHome;
 
   @override
   _InitialQuestionsState createState() => _InitialQuestionsState();
@@ -88,12 +89,14 @@ class _InitialQuestionsState extends State<InitialQuestions> {
             'name': bottleNameController.text,
             'amount': amountSelected,
           }));
-      Navigator.of(context).push(CupertinoPageRoute(
-        builder: (context) => Home(),
-      ));
+      widget.moveAppIndexToHome();
+      // Navigator.of(context).push(CupertinoPageRoute(
+      //   builder: (context) => Home(),
+      // ));
     } else if (bottleSizeSelected[0] ||
         bottleSizeSelected[1] ||
-        bottleSizeSelected[2]) {
+        bottleSizeSelected[2] ||
+        bottleSizeSelected[3]) {
       setState(() => questionViewIndex = 1);
     }
   }

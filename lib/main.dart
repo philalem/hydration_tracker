@@ -1,16 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hydration_tracker/initialQuestions.dart';
+import 'package:hydration_tracker/existingUserWrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  //var sharedPreferences = await SharedPreferences.getInstance();
-  // runApp(Wrapper(
-  //   sharedPreferences: sharedPreferences,
-  // ));
-  runApp(HydrationTracker(
-      // sharedPreferences: sharedPreferences,
-      ));
+  runApp(HydrationTracker());
 }
 
 class HydrationTracker extends StatelessWidget {
@@ -25,8 +19,7 @@ class HydrationTracker extends StatelessWidget {
       theme: CupertinoThemeData(
         primaryColor: Colors.blue,
       ),
-      home: InitialQuestions(),
-      // home: Wrapper(sharedPreferences: sharedPreferences,),
+      home: Wrapper(),
     );
   }
 }

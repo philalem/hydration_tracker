@@ -4,9 +4,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hydration_tracker/addSpecificAmounts.dart';
+import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:simple_animations/simple_animations.dart';
 
 const _duration = Duration(milliseconds: 400);
 
@@ -23,9 +23,12 @@ class _HomeState extends State<Home> {
   Widget animatedChild;
   bool ableToPress = true;
   Map<String, dynamic> todaysAmount;
+  double todaysDifference = 104;
   Map<String, dynamic> bottleInfo;
   SharedPreferences preferences;
   double percent = 0.0;
+  double dailyAmount = 104;
+  List<String> amounts;
 
   @override
   void initState() {
@@ -41,6 +44,7 @@ class _HomeState extends State<Home> {
   Future<Map<String, dynamic>> getStoredData() async {
     preferences = await SharedPreferences.getInstance();
     DateTime date = DateTime.now();
+    amounts = preferences.getStringList('amounts') ?? [];
     var todaysJsonAmount = preferences.getString('todaysAmount');
     todaysAmount = todaysJsonAmount == null
         ? {'amount': 0.0, 'date': date.toIso8601String()}
@@ -49,11 +53,20 @@ class _HomeState extends State<Home> {
         DateTime.parse(restrictFractionalSeconds(todaysAmount['date']));
     if (date.day != storedDate.day ||
         date.month != storedDate.month ||
-        date.year != storedDate.year)
+        date.year != storedDate.year) {
+      amounts.add(jsonEncode(todaysAmount));
       todaysAmount = {'amount': 0.0, 'date': date.toIso8601String()};
+    }
     percent =
         todaysAmount['amount'] / 104 > 1 ? 1.0 : todaysAmount['amount'] / 104;
-    bottleInfo = jsonDecode(preferences.getString('bottleInfo'));
+    var bottleJsonInfo = preferences.getString('bottleInfo');
+    bottleInfo = bottleJsonInfo != null
+        ? jsonDecode(preferences.getString('bottleInfo'))
+        : {
+            'name': 'water cup',
+            'amount': 8,
+          };
+    todaysDifference = dailyAmount - todaysAmount['amount'];
     return todaysAmount;
   }
 
@@ -116,20 +129,43 @@ class _HomeState extends State<Home> {
                               percent: percent,
                               center: Container(
                                 width: width - 200,
-                                child: FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Text(
-                                    "${todaysAmount['amount'].toString()} / 104 oz",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 32.0),
-                                  ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(
+                                        "${(percent * 100).floor().toInt()}% hydrated",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 26.0),
+                                      ),
+                                    ),
+                                    FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(
+                                        todaysDifference > 0
+                                            ? "${((percent - 1).abs() * 100).ceil().toInt()}% to go!"
+                                            : "Awesome job!",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 26.0),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                               circularStrokeCap: CircularStrokeCap.butt,
                               backgroundColor: Colors.grey,
                               progressColor: Colors.blue,
                             ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text('Goal: ${dailyAmount} oz'),
+                            Text('Amount today: ${todaysAmount['amount']} oz'),
+                            Text(
+                                'Amount remaining: ${todaysDifference > 0 ? todaysDifference.toString() : 0.toString()} oz'),
                             SizedBox(
                               height: 20,
                             ),
@@ -177,7 +213,7 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                             SizedBox(
-                              height: 20,
+                              height: 10,
                             ),
                             CupertinoButton(
                               padding: EdgeInsets.zero,
@@ -197,7 +233,7 @@ class _HomeState extends State<Home> {
                               height: 20,
                             ),
                             AspectRatio(
-                              aspectRatio: 1.23,
+                              aspectRatio: 1.53,
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: const BorderRadius.all(
@@ -211,50 +247,45 @@ class _HomeState extends State<Home> {
                                     end: Alignment.topCenter,
                                   ),
                                 ),
-                                child: Stack(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: <Widget>[
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: <Widget>[
-                                        const SizedBox(
-                                          height: 20,
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Container(
+                                      margin:
+                                          EdgeInsets.symmetric(horizontal: 30),
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(
+                                          'Water Intake Over Time',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 32,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 2),
+                                          textAlign: TextAlign.center,
                                         ),
-                                        Container(
-                                          margin: EdgeInsets.symmetric(
-                                              horizontal: 30),
-                                          child: FittedBox(
-                                            fit: BoxFit.contain,
-                                            child: Text(
-                                              'Water Intake Over Time',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 32,
-                                                  fontWeight: FontWeight.bold,
-                                                  letterSpacing: 2),
-                                              textAlign: TextAlign.center,
-                                            ),
-                                          ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 16.0, left: 6.0),
+                                        child: LineChart(
+                                          sampleData1(),
+                                          swapAnimationDuration:
+                                              const Duration(milliseconds: 250),
                                         ),
-                                        const SizedBox(
-                                          height: 37,
-                                        ),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 16.0, left: 6.0),
-                                            child: LineChart(
-                                              sampleData1(),
-                                              swapAnimationDuration:
-                                                  const Duration(
-                                                      milliseconds: 250),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                      ],
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
                                     ),
                                   ],
                                 ),
@@ -300,7 +331,7 @@ class _HomeState extends State<Home> {
             show: true,
           ),
           color: Colors.amber,
-          y: 3,
+          y: 104,
         )
       ]),
       lineTouchData: LineTouchData(
@@ -315,7 +346,12 @@ class _HomeState extends State<Home> {
       ),
       titlesData: FlTitlesData(
         bottomTitles: SideTitles(
-          showTitles: true,
+          getTitles: (value) {
+            String month = DateFormat.MMMM()
+                .format(DateTime.fromMillisecondsSinceEpoch(value.toInt()));
+            return month;
+          },
+          showTitles: false,
           reservedSize: 22,
           textStyle: TextStyle(
             color: Colors.grey[200],
@@ -323,17 +359,6 @@ class _HomeState extends State<Home> {
             fontSize: 16,
           ),
           margin: 10,
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 2:
-                return 'SEPT';
-              case 7:
-                return 'OCT';
-              case 12:
-                return 'DEC';
-            }
-            return '';
-          },
         ),
         leftTitles: SideTitles(
           showTitles: true,
@@ -342,21 +367,9 @@ class _HomeState extends State<Home> {
             fontWeight: FontWeight.bold,
             fontSize: 14,
           ),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '1m';
-              case 2:
-                return '2m';
-              case 3:
-                return '3m';
-              case 4:
-                return '5m';
-            }
-            return '';
-          },
-          margin: 8,
-          reservedSize: 30,
+          interval: 40,
+          margin: 10,
+          reservedSize: 40,
         ),
       ),
       borderData: FlBorderData(
@@ -377,25 +390,33 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      minX: 0,
-      maxX: 14,
-      maxY: 4,
+      maxY: 200,
       minY: 0,
       lineBarsData: linesBarData1(),
     );
   }
 
+  List<FlSpot> getHydrationData() {
+    List<FlSpot> allAmounts = amounts.map((pastAmount) {
+      var decodedAmount = jsonDecode(pastAmount);
+      return FlSpot(
+          DateTime.parse(restrictFractionalSeconds(decodedAmount['date']))
+              .millisecondsSinceEpoch
+              .toDouble(),
+          todaysAmount['amount']);
+    }).toList();
+
+    allAmounts.add(FlSpot(
+        DateTime.parse(restrictFractionalSeconds(todaysAmount['date']))
+            .millisecondsSinceEpoch
+            .toDouble(),
+        todaysAmount['amount']));
+    return allAmounts;
+  }
+
   List<LineChartBarData> linesBarData1() {
     final LineChartBarData lineChartBarData1 = LineChartBarData(
-      spots: [
-        FlSpot(1, 1),
-        FlSpot(3, 1.5),
-        FlSpot(5, 1.4),
-        FlSpot(7, 3.4),
-        FlSpot(10, 2),
-        FlSpot(12, 2.2),
-        FlSpot(13, 1.8),
-      ],
+      spots: getHydrationData(),
       isCurved: true,
       colors: [
         Colors.grey[200],
@@ -403,7 +424,7 @@ class _HomeState extends State<Home> {
       barWidth: 8,
       isStrokeCapRound: true,
       dotData: FlDotData(
-        show: false,
+        show: true,
       ),
       belowBarData: BarAreaData(
         show: false,
@@ -412,38 +433,5 @@ class _HomeState extends State<Home> {
     return [
       lineChartBarData1,
     ];
-  }
-}
-
-class Bar extends StatelessWidget {
-  final double height;
-  final String label;
-
-  final int _baseDurationMs = 1000;
-  final double _maxElementHeight = 100;
-
-  Bar(this.height, this.label);
-
-  @override
-  Widget build(BuildContext context) {
-    return PlayAnimation<double>(
-      duration: Duration(milliseconds: (height * _baseDurationMs).round()),
-      tween: Tween(begin: 0.0, end: height),
-      builder: (context, child, animatedHeight) {
-        return Column(
-          children: <Widget>[
-            Container(
-              height: (1 - animatedHeight) * _maxElementHeight,
-            ),
-            Container(
-              width: 20,
-              height: animatedHeight * _maxElementHeight,
-              color: Colors.blue,
-            ),
-            Text(label)
-          ],
-        );
-      },
-    );
   }
 }
