@@ -351,7 +351,15 @@ class _HomeState extends State<Home> {
                 .format(DateTime.fromMillisecondsSinceEpoch(value.toInt()));
             return month;
           },
-          showTitles: false,
+          checkToShowTitle:
+              (minValue, maxValue, sideTitles, appliedInterval, value) {
+            return DateTime.fromMillisecondsSinceEpoch(value.toInt())
+                    .difference(
+                        DateTime.fromMillisecondsSinceEpoch(1594125866982))
+                    .inMilliseconds ==
+                0;
+          },
+          showTitles: true,
           reservedSize: 22,
           textStyle: TextStyle(
             color: Colors.grey[200],
@@ -411,6 +419,8 @@ class _HomeState extends State<Home> {
             .millisecondsSinceEpoch
             .toDouble(),
         todaysAmount['amount']));
+    allAmounts.add(FlSpot(DateTime.now().millisecondsSinceEpoch.toDouble(),
+        todaysAmount['amount'] + 1));
     return allAmounts;
   }
 
