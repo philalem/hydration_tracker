@@ -77,12 +77,25 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     double width = size.width;
+    const IconData threeDots = const IconData(0xf46a,
+        fontFamily: CupertinoIcons.iconFont,
+        fontPackage: CupertinoIcons.iconFontPackage);
+
     return CupertinoPageScaffold(
       child: CustomScrollView(
         slivers: <Widget>[
           CupertinoSliverNavigationBar(
             largeTitle: Text('Dashboard'),
             backgroundColor: Colors.transparent,
+            trailing: CupertinoButton(
+              onPressed: () => print('pressed the dots'),
+              padding: EdgeInsets.zero,
+              child: Icon(
+                threeDots,
+                color: Colors.blue,
+                size: 30,
+              ),
+            ),
           ),
           SliverFillRemaining(
             hasScrollBody: true,
