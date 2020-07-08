@@ -336,6 +336,17 @@ class _HomeState extends State<Home> {
       ]),
       lineTouchData: LineTouchData(
         touchTooltipData: LineTouchTooltipData(
+          getTooltipItems: (touchedSpots) {
+            return touchedSpots.map((spot) {
+              DateTime date =
+                  DateTime.fromMillisecondsSinceEpoch(spot.x.toInt());
+              String month = DateFormat.MMMM().format(date);
+              String day = DateFormat.d().format(date);
+              String year = DateFormat.y().format(date);
+              return LineTooltipItem(
+                  '${spot.y} oz\n$month ${day}, $year', TextStyle());
+            }).toList();
+          },
           tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
         ),
         touchCallback: (LineTouchResponse touchResponse) {},
@@ -346,20 +357,7 @@ class _HomeState extends State<Home> {
       ),
       titlesData: FlTitlesData(
         bottomTitles: SideTitles(
-          getTitles: (value) {
-            String month = DateFormat.MMMM()
-                .format(DateTime.fromMillisecondsSinceEpoch(value.toInt()));
-            return month;
-          },
-          checkToShowTitle:
-              (minValue, maxValue, sideTitles, appliedInterval, value) {
-            return DateTime.fromMillisecondsSinceEpoch(value.toInt())
-                    .difference(
-                        DateTime.fromMillisecondsSinceEpoch(1594125866982))
-                    .inMilliseconds ==
-                0;
-          },
-          showTitles: true,
+          showTitles: false,
           reservedSize: 22,
           textStyle: TextStyle(
             color: Colors.grey[200],
@@ -419,8 +417,6 @@ class _HomeState extends State<Home> {
             .millisecondsSinceEpoch
             .toDouble(),
         todaysAmount['amount']));
-    allAmounts.add(FlSpot(DateTime.now().millisecondsSinceEpoch.toDouble(),
-        todaysAmount['amount'] + 1));
     return allAmounts;
   }
 
