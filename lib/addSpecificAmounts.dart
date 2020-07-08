@@ -43,8 +43,19 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
             if (amountSelected != 0 ||
                 enteredAmount.text != null ||
                 enteredAmount.text != '') {
-              widget.todaysAmount['amount'] +=
-                  enabled ? double.parse(enteredAmount.text) : amountSelected;
+              if (enabled) {
+                widget.todaysAmount['amount'] = widget.todaysAmount['amount'] +
+                            double.parse(enteredAmount.text) >
+                        200
+                    ? 200
+                    : widget.todaysAmount['amount'] +
+                        double.parse(enteredAmount.text);
+              } else {
+                widget.todaysAmount['amount'] =
+                    widget.todaysAmount['amount'] + amountSelected > 200
+                        ? 200
+                        : widget.todaysAmount['amount'] + amountSelected;
+              }
               preferences.setString(
                   'todaysAmount', jsonEncode(widget.todaysAmount));
             }

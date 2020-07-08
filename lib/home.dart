@@ -202,11 +202,26 @@ class _HomeState extends State<Home> {
                             ),
                             FittedBox(
                               fit: BoxFit.contain,
-                              child: Text(
-                                'Add your ${bottleInfo['name']} to your daily intake',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              child: RichText(
+                                text: TextSpan(
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 20,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: "Add your ",
+                                    ),
+                                    TextSpan(
+                                      text: '${bottleInfo['name']}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: " to your daily intake.",
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                             SizedBox(
@@ -217,8 +232,13 @@ class _HomeState extends State<Home> {
                               onPressed: () async {
                                 if (ableToPress) {
                                   setState(() {
-                                    todaysAmount['amount'] +=
-                                        bottleInfo['amount'];
+                                    todaysAmount['amount'] =
+                                        todaysAmount['amount'] +
+                                                    bottleInfo['amount'] >
+                                                200
+                                            ? 200
+                                            : todaysAmount['amount'] +
+                                                bottleInfo['amount'];
                                     percent = todaysAmount['amount'] / 104 > 1
                                         ? 1.0
                                         : todaysAmount['amount'] / 104;
