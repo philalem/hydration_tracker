@@ -233,11 +233,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
           bottleSizeSelected[1] = false;
           bottleSizeSelected[2] = false;
           bottleSizeSelected[3] = false;
-          if (bottleSizeSelected[0]) {
-            amountSelected = 8;
-          } else {
-            amountSelected = 0;
-          }
+          amountSelected = 8;
         });
         break;
       case 1:
@@ -246,11 +242,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
           bottleSizeSelected[1] = true;
           bottleSizeSelected[2] = false;
           bottleSizeSelected[3] = false;
-          if (bottleSizeSelected[1]) {
-            amountSelected = 16;
-          } else {
-            amountSelected = 0;
-          }
+          amountSelected = 16;
         });
         break;
       case 2:
@@ -259,11 +251,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
           bottleSizeSelected[1] = false;
           bottleSizeSelected[2] = true;
           bottleSizeSelected[3] = false;
-          if (bottleSizeSelected[2]) {
-            amountSelected = 24;
-          } else {
-            amountSelected = 0;
-          }
+          amountSelected = 24;
         });
         break;
       case 3:
@@ -272,11 +260,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
           bottleSizeSelected[1] = false;
           bottleSizeSelected[2] = false;
           bottleSizeSelected[3] = true;
-          if (bottleSizeSelected[3]) {
-            amountSelected = 32;
-          } else {
-            amountSelected = 0;
-          }
+          amountSelected = 32;
         });
         break;
       default:
