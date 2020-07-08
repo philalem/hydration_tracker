@@ -53,10 +53,18 @@ class _HomeState extends State<Home> {
         : jsonDecode(todaysJsonAmount);
     DateTime storedDate =
         DateTime.parse(restrictFractionalSeconds(todaysAmount['date']));
+    // final lastMidnight = new DateTime(date.year, date.month, date.day - 1);
+    // Map<String, dynamic> temp = todaysAmount;
+    // temp['amount'] += 80;
+    // temp['date'] = lastMidnight.toIso8601String();
+    // amounts.add(jsonEncode(temp));
+    // preferences.setStringList('amounts', amounts);
+
     if (date.day != storedDate.day ||
         date.month != storedDate.month ||
         date.year != storedDate.year) {
       amounts.add(jsonEncode(todaysAmount));
+      preferences.setStringList('amounts', amounts);
       todaysAmount = {'amount': 0.0, 'date': date.toIso8601String()};
     }
     percent =
@@ -432,7 +440,7 @@ class _HomeState extends State<Home> {
           DateTime.parse(restrictFractionalSeconds(decodedAmount['date']))
               .millisecondsSinceEpoch
               .toDouble(),
-          todaysAmount['amount']);
+          decodedAmount['amount']);
     }).toList();
 
     allAmounts.add(FlSpot(
