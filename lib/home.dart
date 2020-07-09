@@ -32,40 +32,24 @@ class _HomeState extends State<Home> {
   double dailyAmount = 104;
   List<String> amounts;
 
-  @override
-  void initState() {
-    animatedChild = Text(
-      'Add',
-      style: TextStyle(
-        color: Colors.white,
-      ),
-    );
-    super.initState();
-  }
-
   Future<Map<String, dynamic>> getStoredData() async {
     preferences = await SharedPreferences.getInstance();
     DateTime date = DateTime.now();
+    final today = DateTime(date.year, date.month, date.day);
     amounts = preferences.getStringList('amounts') ?? [];
     var todaysJsonAmount = preferences.getString('todaysAmount');
     todaysAmount = todaysJsonAmount == null
-        ? {'amount': 0.0, 'date': date.toIso8601String()}
+        ? {'amount': 0.0, 'date': today.toIso8601String()}
         : jsonDecode(todaysJsonAmount);
     DateTime storedDate =
         DateTime.parse(restrictFractionalSeconds(todaysAmount['date']));
-    // final lastMidnight = new DateTime(date.year, date.month, date.day - 1);
-    // Map<String, dynamic> temp = todaysAmount;
-    // temp['amount'] += 80;
-    // temp['date'] = lastMidnight.toIso8601String();
-    // amounts.add(jsonEncode(temp));
-    // preferences.setStringList('amounts', amounts);
 
-    if (date.day != storedDate.day ||
-        date.month != storedDate.month ||
-        date.year != storedDate.year) {
+    if (today.day != storedDate.day ||
+        today.month != storedDate.month ||
+        today.year != storedDate.year) {
       amounts.add(jsonEncode(todaysAmount));
       preferences.setStringList('amounts', amounts);
-      todaysAmount = {'amount': 0.0, 'date': date.toIso8601String()};
+      todaysAmount = {'amount': 0.0, 'date': today.toIso8601String()};
     }
     percent =
         todaysAmount['amount'] / 104 > 1 ? 1.0 : todaysAmount['amount'] / 104;
@@ -243,24 +227,13 @@ class _HomeState extends State<Home> {
                                         ? 1.0
                                         : todaysAmount['amount'] / 104;
                                     ableToPress = false;
-                                    animatedChild = Icon(
-                                      Icons.check,
-                                      size: 20,
-                                    );
                                   });
                                   preferences.setString(
                                       'todaysAmount', jsonEncode(todaysAmount));
-                                  switchBackAfterThreeSeconds();
                                 }
                               },
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  AnimatedSwitcher(
-                                    child: animatedChild,
-                                    duration: _duration,
-                                  ),
-                                ],
+                              child: Text(
+                                'Add',
                               ),
                             ),
                             SizedBox(
@@ -352,19 +325,6 @@ class _HomeState extends State<Home> {
         ],
       ),
     );
-  }
-
-  Future switchBackAfterThreeSeconds() async {
-    await Future.delayed(const Duration(seconds: 3));
-    setState(() {
-      animatedChild = Text(
-        'Add',
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      );
-      ableToPress = true;
-    });
   }
 
   LineChartData sampleData1() {
