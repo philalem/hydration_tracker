@@ -41,6 +41,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
               child: AnimatedIndexedStack(
                 index: questionViewIndex,
                 children: <Widget>[
+                  // TODO: add a page to ask gender
                   selectBottleSize(),
                   Center(
                       child: EnterBottleName(
