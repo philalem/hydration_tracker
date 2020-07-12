@@ -10,9 +10,6 @@ class GenderInfo extends StatefulWidget {
 }
 
 class _GenderInfoState extends State<GenderInfo> {
-  bool isFemale = false;
-  bool isMale = false;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -36,16 +33,19 @@ class _GenderInfoState extends State<GenderInfo> {
                   child: CupertinoButton(
                     padding: EdgeInsets.zero,
                     onPressed: () => setState(() {
-                      isMale = false;
-                      isFemale = true;
                       widget.gender = 'Female';
                     }),
-                    color: isFemale ? Colors.blue : Colors.white,
+                    color: widget.gender == 'Female' && widget.gender != null
+                        ? Colors.blue
+                        : Colors.white,
                     child: Text(
                       'Female',
                       style: TextStyle(
                         fontSize: 28,
-                        color: !isFemale ? Colors.blue : Colors.white,
+                        color:
+                            widget.gender == 'Female' && widget.gender != null
+                                ? Colors.white
+                                : Colors.blue,
                       ),
                     ),
                   ),
@@ -57,16 +57,18 @@ class _GenderInfoState extends State<GenderInfo> {
                   child: CupertinoButton(
                     padding: EdgeInsets.zero,
                     onPressed: () => setState(() {
-                      isFemale = false;
-                      isMale = true;
                       widget.gender = 'Male';
                     }),
-                    color: isMale ? Colors.blue : Colors.white,
+                    color: widget.gender == 'Male' && widget.gender != null
+                        ? Colors.blue
+                        : Colors.white,
                     child: Text(
                       'Male',
                       style: TextStyle(
                         fontSize: 28,
-                        color: !isMale ? Colors.blue : Colors.white,
+                        color: widget.gender == 'Male' && widget.gender != null
+                            ? Colors.white
+                            : Colors.blue,
                       ),
                     ),
                   ),
