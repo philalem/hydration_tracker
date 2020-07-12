@@ -23,6 +23,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   int questionViewIndex = 0;
   Widget questionView;
   double amountSelected = 0;
+  String gender;
 
   @override
   void initState() {
@@ -49,7 +50,9 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     choice: getChoice(),
                     bottleNameController: bottleNameController,
                   )),
-                  GenderInfo(),
+                  GenderInfo(
+                    gender: gender,
+                  ),
                 ],
               ),
             ),
@@ -67,8 +70,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                       child: Text('Back'),
                     ),
                   CupertinoButton(
-                    onPressed: () =>
-                        navigateToEditNameOrHome(bottleNameController),
+                    onPressed: () => navigateToNextPage(bottleNameController),
                     padding: EdgeInsets.zero,
                     child: Text('Next'),
                   )
@@ -81,10 +83,8 @@ class _InitialQuestionsState extends State<InitialQuestions> {
     );
   }
 
-  void navigateToEditNameOrHome(bottleNameController) async {
-    if (bottleNameController.text != null &&
-        bottleNameController.text != '' &&
-        questionViewIndex == 1) {
+  void navigateToNextPage(bottleNameController) async {
+    if (gender != null) {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString(
           'bottleInfo',
@@ -92,10 +92,15 @@ class _InitialQuestionsState extends State<InitialQuestions> {
             'name': bottleNameController.text,
             'amount': amountSelected,
           }));
+      preferences.setString('personInfo', jsonEncode({'gender': gender}));
       widget.moveAppIndexToHome();
       // Navigator.of(context).push(CupertinoPageRoute(
       //   builder: (context) => Home(),
       // ));
+    } else if (bottleNameController.text != null &&
+        bottleNameController.text != '' &&
+        questionViewIndex == 1) {
+      setState(() => questionViewIndex = 2);
     } else if (bottleSizeSelected[0] ||
         bottleSizeSelected[1] ||
         bottleSizeSelected[2] ||

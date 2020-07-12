@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hydration_tracker/glass_of_water_icons.dart';
 import 'package:hydration_tracker/my_flutter_app_icons.dart';
 
 class GenderInfo extends StatefulWidget {
-  GenderInfo({this.choice, this.bottleNameController});
+  GenderInfo({this.gender});
 
-  final String choice;
-  final TextEditingController bottleNameController;
+  final String gender;
   @override
   _GenderInfoState createState() => _GenderInfoState();
 }
@@ -33,19 +31,15 @@ class _GenderInfoState extends State<GenderInfo> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Icon(
-                      widget.choice == 'Glass of water'
-                          ? GlassOfWater.glassofwater
-                          : MyFlutterApp.water_bottle,
+                      MyFlutterApp.water_bottle,
                       size: 100,
                       color: Colors.blue,
                     ),
-                    Text(widget.choice),
                   ],
                 ),
               ),
               Expanded(
                 child: CupertinoTextField(
-                  controller: widget.bottleNameController,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     border: Border(
