@@ -46,6 +46,7 @@ class _HomeState extends State<Home> {
     if (today.day != storedDate.day ||
         today.month != storedDate.month ||
         today.year != storedDate.year) {
+      // TODO: add the dates in between to be 0 oz intake
       amounts.add(jsonEncode(todaysAmount));
       preferences.setStringList('amounts', amounts);
       todaysAmount = {'amount': 0.0, 'date': today.toIso8601String()};

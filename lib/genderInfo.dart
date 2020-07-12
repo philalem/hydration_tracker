@@ -28,8 +28,13 @@ class _GenderInfoState extends State<GenderInfo> {
                 child: Container(
                   margin: EdgeInsets.all(5),
                   child: CupertinoButton(
-                    onPressed: () => print('Woman'),
-                    child: Text('Woman'),
+                    onPressed: () => print('Female'),
+                    child: Text(
+                      'Female',
+                      style: TextStyle(
+                        fontSize: 28,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -37,8 +42,13 @@ class _GenderInfoState extends State<GenderInfo> {
                 child: Container(
                   margin: EdgeInsets.all(5),
                   child: CupertinoButton(
-                    onPressed: () => print('Woman'),
-                    child: Text('Woman'),
+                    onPressed: () => print('Male'),
+                    child: Text(
+                      'Male',
+                      style: TextStyle(
+                        fontSize: 28,
+                      ),
+                    ),
                   ),
                 ),
               ),

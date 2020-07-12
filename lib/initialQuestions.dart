@@ -24,6 +24,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   Widget questionView;
   double amountSelected = 0;
   String gender;
+  TextEditingController bottleNameController = TextEditingController();
 
   @override
   void initState() {
@@ -33,7 +34,6 @@ class _InitialQuestionsState extends State<InitialQuestions> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController bottleNameController = TextEditingController();
     return CupertinoPageScaffold(
       child: SafeArea(
         child: Stack(
@@ -43,7 +43,6 @@ class _InitialQuestionsState extends State<InitialQuestions> {
               child: AnimatedIndexedStack(
                 index: questionViewIndex,
                 children: <Widget>[
-                  // TODO: add a page to ask gender
                   selectBottleSize(),
                   Center(
                       child: EnterBottleName(
@@ -65,7 +64,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                 children: <Widget>[
                   if (questionViewIndex != 0)
                     CupertinoButton(
-                      onPressed: () => setState(() => questionViewIndex = 0),
+                      onPressed: () => navigateToPreviousPage(),
                       padding: EdgeInsets.zero,
                       child: Text('Back'),
                     ),
@@ -81,6 +80,15 @@ class _InitialQuestionsState extends State<InitialQuestions> {
         ),
       ),
     );
+  }
+
+  void navigateToPreviousPage() {
+    if (questionViewIndex == 1) {
+      questionViewIndex = 0;
+    } else if (questionViewIndex == 2) {
+      questionViewIndex = 1;
+    }
+    setState(() {});
   }
 
   void navigateToNextPage(bottleNameController) async {
