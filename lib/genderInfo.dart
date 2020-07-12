@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 class GenderInfo extends StatefulWidget {
   GenderInfo({this.gender});
 
-  final String gender;
+  String gender;
   @override
   _GenderInfoState createState() => _GenderInfoState();
 }
 
 class _GenderInfoState extends State<GenderInfo> {
+  bool isFemale = false;
+  bool isMale = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,6 +24,9 @@ class _GenderInfoState extends State<GenderInfo> {
             'Please select your gender.',
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
           ),
+          SizedBox(
+            height: 20,
+          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
@@ -28,11 +34,18 @@ class _GenderInfoState extends State<GenderInfo> {
                 child: Container(
                   margin: EdgeInsets.all(5),
                   child: CupertinoButton(
-                    onPressed: () => print('Female'),
+                    padding: EdgeInsets.zero,
+                    onPressed: () => setState(() {
+                      isMale = false;
+                      isFemale = true;
+                      widget.gender = 'Female';
+                    }),
+                    color: isFemale ? Colors.blue : Colors.white,
                     child: Text(
                       'Female',
                       style: TextStyle(
                         fontSize: 28,
+                        color: !isFemale ? Colors.blue : Colors.white,
                       ),
                     ),
                   ),
@@ -42,11 +55,18 @@ class _GenderInfoState extends State<GenderInfo> {
                 child: Container(
                   margin: EdgeInsets.all(5),
                   child: CupertinoButton(
-                    onPressed: () => print('Male'),
+                    padding: EdgeInsets.zero,
+                    onPressed: () => setState(() {
+                      isFemale = false;
+                      isMale = true;
+                      widget.gender = 'Male';
+                    }),
+                    color: isMale ? Colors.blue : Colors.white,
                     child: Text(
                       'Male',
                       style: TextStyle(
                         fontSize: 28,
+                        color: !isMale ? Colors.blue : Colors.white,
                       ),
                     ),
                   ),
