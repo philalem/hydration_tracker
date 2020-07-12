@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hydration_tracker/animatedIndexedStack.dart';
 import 'package:hydration_tracker/enterBottleName.dart';
+import 'package:hydration_tracker/genderInfo.dart';
 import 'package:hydration_tracker/glass_of_water_icons.dart';
 import 'package:hydration_tracker/my_flutter_app_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,6 +49,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     choice: getChoice(),
                     bottleNameController: bottleNameController,
                   )),
+                  GenderInfo(),
                 ],
               ),
             ),
