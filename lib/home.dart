@@ -23,7 +23,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool isShowingMainData;
   Widget animatedChild;
-  bool ableToPress = true;
   Map<String, dynamic> todaysAmount;
   double todaysDifference = 104;
   Map<String, dynamic> bottleInfo;
@@ -214,23 +213,21 @@ class _HomeState extends State<Home> {
                             CupertinoButton(
                               color: Colors.blue,
                               onPressed: () async {
-                                if (ableToPress) {
-                                  setState(() {
-                                    todaysAmount['amount'] =
-                                        todaysAmount['amount'] +
-                                                    bottleInfo['amount'] >
-                                                200
-                                            ? 200
-                                            : todaysAmount['amount'] +
-                                                bottleInfo['amount'];
-                                    percent = todaysAmount['amount'] / 104 > 1
+                                todaysAmount['amount'] =
+                                    todaysAmount['amount'] +
+                                                bottleInfo['amount'] >
+                                            200
+                                        ? 200
+                                        : todaysAmount['amount'] +
+                                            bottleInfo['amount'];
+                                double tempPercent =
+                                    todaysAmount['amount'] / 104 > 1
                                         ? 1.0
                                         : todaysAmount['amount'] / 104;
-                                    ableToPress = false;
-                                  });
-                                  preferences.setString(
-                                      'todaysAmount', jsonEncode(todaysAmount));
-                                }
+                                percent = tempPercent;
+                                preferences.setString(
+                                    'todaysAmount', jsonEncode(todaysAmount));
+                                setState(() {});
                               },
                               child: Text(
                                 'Add',
