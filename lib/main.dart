@@ -69,6 +69,10 @@ Future scheduleNotificationsForTheWeek() async {
   }
   preferences.setString(
       'lastDateToScheduleNotifications', today.toIso8601String());
+  await scheduleNotificationsForNextSevenDays(today);
+}
+
+Future scheduleNotificationsForNextSevenDays(DateTime today) async {
   for (int i = 1; i < 8; i++) {
     var scheduledNotificationDateTime =
         DateTime(today.year, today.month, today.day + i, 6, 30);
