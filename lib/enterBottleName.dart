@@ -1,7 +1,7 @@
+import 'package:hydratee/glass_of_water_icons.dart';
+import 'package:hydratee/my_flutter_app_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hydration_tracker/glass_of_water_icons.dart';
-import 'package:hydration_tracker/my_flutter_app_icons.dart';
 
 class EnterBottleName extends StatefulWidget {
   EnterBottleName({this.choice, this.bottleNameController});

@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:hydratee/glass_of_water_icons.dart';
+import 'package:hydratee/my_flutter_app_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hydration_tracker/glass_of_water_icons.dart';
-import 'package:hydration_tracker/my_flutter_app_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddSpecificAmount extends StatefulWidget {

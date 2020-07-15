@@ -1,4 +1,4 @@
-# hydration_tracker
+# Hydratee
 
 A new Flutter project.
 

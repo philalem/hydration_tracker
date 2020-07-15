@@ -1,8 +1,8 @@
+import 'package:hydratee/animatedIndexedStack.dart';
+import 'package:hydratee/home.dart';
+import 'package:hydratee/initialQuestions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hydration_tracker/animatedIndexedStack.dart';
-import 'package:hydration_tracker/home.dart';
-import 'package:hydration_tracker/initialQuestions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Wrapper extends StatefulWidget {

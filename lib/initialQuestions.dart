@@ -1,13 +1,14 @@
 import 'dart:convert';
 
+import 'package:hydratee/animatedIndexedStack.dart';
+import 'package:hydratee/enterBottleName.dart';
+import 'package:hydratee/genderInfo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:hydration_tracker/animatedIndexedStack.dart';
-import 'package:hydration_tracker/enterBottleName.dart';
-import 'package:hydration_tracker/genderInfo.dart';
-import 'package:hydration_tracker/glass_of_water_icons.dart';
-import 'package:hydration_tracker/my_flutter_app_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'glass_of_water_icons.dart';
+import 'my_flutter_app_icons.dart';
 
 class InitialQuestions extends StatefulWidget {
   InitialQuestions({this.moveAppIndexToHome});

@@ -1,7 +1,7 @@
+import 'package:hydratee/existingUserWrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:hydration_tracker/existingUserWrapper.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,7 +34,7 @@ class ReceivedNotification {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   scheduleNotificationsForTheWeek();
-  runApp(HydrationTracker());
+  runApp(Hydratee());
 }
 
 Future scheduleNotificationsForTheWeek() async {
@@ -77,8 +77,8 @@ Future scheduleNotificationsForNextSevenDays(DateTime today) async {
     var scheduledNotificationDateTime =
         DateTime(today.year, today.month, today.day + i, 6, 30);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'Hydrate',
-        'Hydration App',
+        'Hydratee',
+        'Hydratee',
         'An app to help you track your water intake quickly and efficiently.');
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     NotificationDetails platformChannelSpecifics = NotificationDetails(
@@ -107,10 +107,10 @@ Future<bool> checkIfAWeekHasPassed(
 String restrictFractionalSeconds(String dateTime) =>
     dateTime.replaceFirstMapped(RegExp("(\\.\\d{6})\\d+"), (m) => m[1]);
 
-class HydrationTracker extends StatelessWidget {
+class Hydratee extends StatelessWidget {
   final SharedPreferences sharedPreferences;
 
-  HydrationTracker({Key key, this.sharedPreferences}) : super(key: key);
+  Hydratee({Key key, this.sharedPreferences}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
