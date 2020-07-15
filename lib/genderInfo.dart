@@ -2,14 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class GenderInfo extends StatefulWidget {
-  GenderInfo({this.gender});
+  GenderInfo({this.genderFunction});
 
-  String gender;
+  final Function genderFunction;
   @override
   _GenderInfoState createState() => _GenderInfoState();
 }
 
 class _GenderInfoState extends State<GenderInfo> {
+  String selectedGender;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,10 +34,8 @@ class _GenderInfoState extends State<GenderInfo> {
                   margin: EdgeInsets.all(5),
                   child: CupertinoButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () => setState(() {
-                      widget.gender = 'Female';
-                    }),
-                    color: widget.gender == 'Female' && widget.gender != null
+                    onPressed: () => setSelectedGender('Female'),
+                    color: selectedGender == 'Female' && selectedGender != null
                         ? Colors.blue
                         : Colors.white,
                     child: Text(
@@ -43,7 +43,7 @@ class _GenderInfoState extends State<GenderInfo> {
                       style: TextStyle(
                         fontSize: 28,
                         color:
-                            widget.gender == 'Female' && widget.gender != null
+                            selectedGender == 'Female' && selectedGender != null
                                 ? Colors.white
                                 : Colors.blue,
                       ),
@@ -56,19 +56,18 @@ class _GenderInfoState extends State<GenderInfo> {
                   margin: EdgeInsets.all(5),
                   child: CupertinoButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () => setState(() {
-                      widget.gender = 'Male';
-                    }),
-                    color: widget.gender == 'Male' && widget.gender != null
+                    onPressed: () => setSelectedGender('Male'),
+                    color: selectedGender == 'Male' && selectedGender != null
                         ? Colors.blue
                         : Colors.white,
                     child: Text(
                       'Male',
                       style: TextStyle(
                         fontSize: 28,
-                        color: widget.gender == 'Male' && widget.gender != null
-                            ? Colors.white
-                            : Colors.blue,
+                        color:
+                            selectedGender == 'Male' && selectedGender != null
+                                ? Colors.white
+                                : Colors.blue,
                       ),
                     ),
                   ),
@@ -79,5 +78,12 @@ class _GenderInfoState extends State<GenderInfo> {
         ],
       ),
     );
+  }
+
+  void setSelectedGender(String gender) {
+    setState(() {
+      selectedGender = gender;
+    });
+    widget.genderFunction(selectedGender);
   }
 }

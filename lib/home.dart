@@ -22,14 +22,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isShowingMainData;
-  Widget animatedChild;
   Map<String, dynamic> todaysAmount;
-  double todaysDifference = 104;
+  double todaysDifference;
   Map<String, dynamic> bottleInfo;
   SharedPreferences preferences;
   double percent = 0.0;
-  double dailyAmount = 104;
   List<String> amounts;
+  double waterGoal;
 
   Future<Map<String, dynamic>> getStoredData() async {
     preferences = await SharedPreferences.getInstance();
@@ -42,7 +41,8 @@ class _HomeState extends State<Home> {
         : jsonDecode(todaysJsonAmount);
     DateTime storedDate =
         DateTime.parse(restrictFractionalSeconds(todaysAmount['date']));
-
+    String retrievedPersonInfo = preferences.getString('personInfo');
+    waterGoal = retrievedPersonInfo == 'Female' ? 91 : 125;
     if (today.day != storedDate.day ||
         today.month != storedDate.month ||
         today.year != storedDate.year) {
@@ -51,8 +51,9 @@ class _HomeState extends State<Home> {
       preferences.setStringList('amounts', amounts);
       todaysAmount = {'amount': 0.0, 'date': today.toIso8601String()};
     }
-    percent =
-        todaysAmount['amount'] / 104 > 1 ? 1.0 : todaysAmount['amount'] / 104;
+    percent = todaysAmount['amount'] / waterGoal > 1
+        ? 1.0
+        : todaysAmount['amount'] / waterGoal;
     var bottleJsonInfo = preferences.getString('bottleInfo');
     bottleInfo = bottleJsonInfo != null
         ? jsonDecode(preferences.getString('bottleInfo'))
@@ -60,7 +61,7 @@ class _HomeState extends State<Home> {
             'name': 'water cup',
             'amount': 8,
           };
-    todaysDifference = dailyAmount - todaysAmount['amount'];
+    todaysDifference = waterGoal - todaysAmount['amount'];
     return todaysAmount;
   }
 
@@ -177,7 +178,7 @@ class _HomeState extends State<Home> {
                             SizedBox(
                               height: 20,
                             ),
-                            Text('Goal: ${dailyAmount} oz'),
+                            Text('Goal: $waterGoal oz'),
                             Text('Amount today: ${todaysAmount['amount']} oz'),
                             Text(
                                 'Amount remaining: ${todaysDifference > 0 ? todaysDifference.toString() : 0.toString()} oz'),
@@ -222,9 +223,9 @@ class _HomeState extends State<Home> {
                                         : todaysAmount['amount'] +
                                             bottleInfo['amount'];
                                 double tempPercent =
-                                    todaysAmount['amount'] / 104 > 1
+                                    todaysAmount['amount'] / waterGoal > 1
                                         ? 1.0
-                                        : todaysAmount['amount'] / 104;
+                                        : todaysAmount['amount'] / waterGoal;
                                 percent = tempPercent;
                                 preferences.setString(
                                     'todaysAmount', jsonEncode(todaysAmount));
@@ -340,7 +341,7 @@ class _HomeState extends State<Home> {
             show: true,
           ),
           color: Colors.amber,
-          y: 104,
+          y: waterGoal,
         )
       ]),
       lineTouchData: LineTouchData(

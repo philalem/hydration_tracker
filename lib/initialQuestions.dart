@@ -51,7 +51,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     bottleNameController: bottleNameController,
                   )),
                   GenderInfo(
-                    gender: gender,
+                    genderFunction: initializeGender,
                   ),
                 ],
               ),
@@ -83,6 +83,12 @@ class _InitialQuestionsState extends State<InitialQuestions> {
     );
   }
 
+  void initializeGender(String selectedGender) {
+    setState(() {
+      gender = selectedGender;
+    });
+  }
+
   void navigateToPreviousPage() {
     if (questionViewIndex == 1) {
       questionViewIndex = 0;
@@ -93,7 +99,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   }
 
   void navigateToNextPage(bottleNameController) async {
-    if (gender != null) {
+    if (gender != null && questionViewIndex == 2) {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString(
           'bottleInfo',
@@ -101,19 +107,17 @@ class _InitialQuestionsState extends State<InitialQuestions> {
             'name': bottleNameController.text,
             'amount': amountSelected,
           }));
-      preferences.setString('personInfo', jsonEncode({'gender': gender}));
+      preferences.setString('personInfo', gender);
       widget.moveAppIndexToHome();
-      // Navigator.of(context).push(CupertinoPageRoute(
-      //   builder: (context) => Home(),
-      // ));
     } else if (bottleNameController.text != null &&
         bottleNameController.text != '' &&
         questionViewIndex == 1) {
       setState(() => questionViewIndex = 2);
-    } else if (bottleSizeSelected[0] ||
-        bottleSizeSelected[1] ||
-        bottleSizeSelected[2] ||
-        bottleSizeSelected[3]) {
+    } else if ((bottleSizeSelected[0] ||
+            bottleSizeSelected[1] ||
+            bottleSizeSelected[2] ||
+            bottleSizeSelected[3]) &&
+        questionViewIndex == 0) {
       setState(() => questionViewIndex = 1);
     }
   }
