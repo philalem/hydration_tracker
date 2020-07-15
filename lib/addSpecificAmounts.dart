@@ -34,6 +34,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        brightness: Brightness.light,
         backgroundColor: Colors.transparent,
         middle: Text('Add a specific amount of water'),
         trailing: CupertinoButton(

@@ -56,6 +56,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
+        brightness: Brightness.light,
         backgroundColor: Colors.transparent,
         middle: Text('Edit your bottle selection'),
         trailing: CupertinoButton(

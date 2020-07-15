@@ -82,6 +82,7 @@ class _HomeState extends State<Home> {
       child: CustomScrollView(
         slivers: <Widget>[
           CupertinoSliverNavigationBar(
+            brightness: Brightness.light,
             largeTitle: Text('Dashboard'),
             backgroundColor: Colors.transparent,
             trailing: CupertinoButton(

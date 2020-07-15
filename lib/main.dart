@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:hydratee/existingUserWrapper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -117,9 +118,9 @@ class Hydratee extends StatelessWidget {
     return CupertinoApp(
       title: 'Flutter Demo',
       theme: CupertinoThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        primaryColor: Colors.blue,
-      ),
+          scaffoldBackgroundColor: Colors.white,
+          primaryColor: Colors.blue,
+          brightness: Brightness.light),
       home: Wrapper(),
     );
   }
