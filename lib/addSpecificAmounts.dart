@@ -18,7 +18,7 @@ class AddSpecificAmount extends StatefulWidget {
 
 class _AddSpecificAmountState extends State<AddSpecificAmount> {
   List<bool> bottleSizeSelected = [false, false, false, false];
-  double amountSelected = 0;
+  double amountSelected = 0.0;
   bool enabled = true;
   int questionViewIndex = 0;
   Widget questionView;
@@ -40,26 +40,32 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
           onPressed: () async {
             SharedPreferences preferences =
                 await SharedPreferences.getInstance();
-            if (amountSelected != 0 ||
-                enteredAmount.text != null ||
-                enteredAmount.text != '') {
+            if (amountSelected != 0.0 || enteredAmount.text.isNotEmpty) {
               if (enabled) {
-                widget.todaysAmount['amount'] = widget.todaysAmount['amount'] +
-                            double.parse(enteredAmount.text) >
-                        200
-                    ? 200
-                    : widget.todaysAmount['amount'] +
-                        double.parse(enteredAmount.text);
+                if (widget.todaysAmount['amount'] +
+                        double.parse(enteredAmount.text) >
+                    240.0) {
+                  widget.todaysAmount['amount'] = 240.0;
+                  showMaxAmountAlert();
+                } else {
+                  widget.todaysAmount['amount'] =
+                      widget.todaysAmount['amount'] +
+                          double.parse(enteredAmount.text);
+                  Navigator.of(context).pop();
+                }
               } else {
-                widget.todaysAmount['amount'] =
-                    widget.todaysAmount['amount'] + amountSelected > 200
-                        ? 200
-                        : widget.todaysAmount['amount'] + amountSelected;
+                if (widget.todaysAmount['amount'] + amountSelected > 240.0) {
+                  widget.todaysAmount['amount'] = 240.0;
+                  showMaxAmountAlert();
+                } else {
+                  widget.todaysAmount['amount'] =
+                      widget.todaysAmount['amount'] + amountSelected;
+                  Navigator.of(context).pop();
+                }
               }
               preferences.setString(
                   'todaysAmount', jsonEncode(widget.todaysAmount));
             }
-            Navigator.of(context).pop();
           },
           padding: EdgeInsets.zero,
           child: Text('Save'),
@@ -284,6 +290,28 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
       default:
         break;
     }
+  }
+
+  void showMaxAmountAlert() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text("Maximum Intake Reached"),
+          content: Text("You have reached the maximum water intake (240 oz)."),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(
+                "Okay",
+              ),
+              onPressed: () {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

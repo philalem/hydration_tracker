@@ -39,6 +39,8 @@ class _HomeState extends State<Home> {
     todaysAmount = todaysJsonAmount == null
         ? {'amount': 0.0, 'date': today.toIso8601String()}
         : jsonDecode(todaysJsonAmount);
+    // todaysAmount = {'amount': 200.0, 'date': today.toIso8601String()};
+    // preferences.setString('todaysAmount', jsonEncode(todaysAmount));
     DateTime storedDate =
         DateTime.parse(restrictFractionalSeconds(todaysAmount['date']));
     String retrievedPersonInfo = preferences.getString('personInfo');
@@ -215,13 +217,16 @@ class _HomeState extends State<Home> {
                             CupertinoButton(
                               color: Colors.blue,
                               onPressed: () async {
-                                todaysAmount['amount'] =
-                                    todaysAmount['amount'] +
-                                                bottleInfo['amount'] >
-                                            200
-                                        ? 200
-                                        : todaysAmount['amount'] +
-                                            bottleInfo['amount'];
+                                if (todaysAmount['amount'] +
+                                        bottleInfo['amount'] >
+                                    240.0) {
+                                  todaysAmount['amount'] = 240.0;
+                                  showMaxAmountAlert();
+                                } else {
+                                  todaysAmount['amount'] =
+                                      todaysAmount['amount'] +
+                                          bottleInfo['amount'];
+                                }
                                 double tempPercent =
                                     todaysAmount['amount'] / waterGoal > 1
                                         ? 1.0
@@ -406,7 +411,7 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      maxY: 200,
+      maxY: 240,
       minY: 0,
       lineBarsData: linesBarData1(),
     );
@@ -449,5 +454,27 @@ class _HomeState extends State<Home> {
     return [
       lineChartBarData1,
     ];
+  }
+
+  void showMaxAmountAlert() {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text("Maximum Intake Reached"),
+          content: Text("You have reached the maximum water intake (240 oz)."),
+          actions: <Widget>[
+            CupertinoDialogAction(
+              child: Text(
+                "Okay",
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }

@@ -117,6 +117,7 @@ class Hydratee extends StatelessWidget {
     return CupertinoApp(
       title: 'Flutter Demo',
       theme: CupertinoThemeData(
+        scaffoldBackgroundColor: Colors.white,
         primaryColor: Colors.blue,
       ),
       home: Wrapper(),
