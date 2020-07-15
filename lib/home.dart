@@ -103,11 +103,9 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
-          SliverFillRemaining(
-            hasScrollBody: true,
-            child: ListView(
-              physics: NeverScrollableScrollPhysics(),
-              children: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate(
+              <Widget>[
                 FutureBuilder(
                     future: getStoredData(),
                     builder: (context, snapshot) {
@@ -118,7 +116,8 @@ class _HomeState extends State<Home> {
                         );
                       }
                       return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        margin:
+                            EdgeInsets.symmetric(vertical: 40, horizontal: 20),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -281,7 +280,7 @@ class _HomeState extends State<Home> {
                                       CrossAxisAlignment.stretch,
                                   children: <Widget>[
                                     const SizedBox(
-                                      height: 20,
+                                      height: 10,
                                     ),
                                     Container(
                                       margin:
