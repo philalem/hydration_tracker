@@ -43,8 +43,6 @@ Future scheduleNotificationsForTheWeek() async {
       await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
 
   var initializationSettingsAndroid = AndroidInitializationSettings('app_icon');
-  // Note: permissions aren't requested here just to demonstrate that can be done later using the `requestPermissions()` method
-  // of the `IOSFlutterLocalNotificationsPlugin` class
   var initializationSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -124,6 +122,7 @@ class Hydratee extends StatelessWidget {
     ]);
     return CupertinoApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: CupertinoThemeData(
           scaffoldBackgroundColor: Colors.white,
           primaryColor: Colors.blue,
