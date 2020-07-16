@@ -65,16 +65,19 @@ Future scheduleNotificationsForTheWeek() async {
   });
   SharedPreferences preferences = await SharedPreferences.getInstance();
   DateTime today = DateTime.now();
-  if (!await checkIfAWeekHasPassed(preferences, today)) {
+  int differenceDays = await checkIfAWeekHasPassed(preferences, today);
+  if (differenceDays < 1) {
     return;
   }
   preferences.setString(
       'lastDateToScheduleNotifications', today.toIso8601String());
-  await scheduleNotificationsForNextSevenDays(today);
+  await scheduleNotificationsForNextSevenDays(today, differenceDays);
 }
 
-Future scheduleNotificationsForNextSevenDays(DateTime today) async {
-  for (int i = 1; i < 8; i++) {
+Future scheduleNotificationsForNextSevenDays(
+    DateTime today, int differenceDays) async {
+  int differencePlusOne = differenceDays + 1;
+  for (int i = 1; i < differencePlusOne; i++) {
     var scheduledNotificationDateTime =
         DateTime(today.year, today.month, today.day + i, 6, 30);
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
@@ -93,16 +96,16 @@ Future scheduleNotificationsForNextSevenDays(DateTime today) async {
   }
 }
 
-Future<bool> checkIfAWeekHasPassed(
+Future<int> checkIfAWeekHasPassed(
     SharedPreferences preferences, DateTime today) async {
   String lastScheduledDate =
       preferences.getString('lastDateToScheduleNotifications');
   if (lastScheduledDate == null) {
-    return true;
+    return 7;
   }
   DateTime storedDate =
       DateTime.parse(restrictFractionalSeconds(lastScheduledDate));
-  return storedDate.difference(today).inDays >= 7;
+  return storedDate.difference(today).inDays;
 }
 
 String restrictFractionalSeconds(String dateTime) =>

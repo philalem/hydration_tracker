@@ -39,8 +39,6 @@ class _HomeState extends State<Home> {
     todaysAmount = todaysJsonAmount == null
         ? {'amount': 0.0, 'date': today.toIso8601String()}
         : jsonDecode(todaysJsonAmount);
-    // todaysAmount = {'amount': 200.0, 'date': today.toIso8601String()};
-    // preferences.setString('todaysAmount', jsonEncode(todaysAmount));
     DateTime storedDate =
         DateTime.parse(restrictFractionalSeconds(todaysAmount['date']));
     String retrievedPersonInfo = preferences.getString('personInfo');
