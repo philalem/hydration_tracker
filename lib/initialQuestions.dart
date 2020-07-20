@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:math' as math;
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hydratee/animatedIndexedStack.dart';
 import 'package:hydratee/enterBottleName.dart';
 import 'package:hydratee/genderInfo.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'glass_of_water_icons.dart';

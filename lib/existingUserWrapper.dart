@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hydratee/animatedIndexedStack.dart';
 import 'package:hydratee/home.dart';
 import 'package:hydratee/initialQuestions.dart';
@@ -41,9 +42,7 @@ class _WrapperState extends State<Wrapper> {
           return Home();
         } else {
           return Scaffold(
-            body: Center(
-              child: CupertinoActivityIndicator(),
-            ),
+            body: Container(),
           );
         }
       },
