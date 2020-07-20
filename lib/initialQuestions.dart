@@ -110,7 +110,8 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           'bottleInfo',
           jsonEncode({
             'name': bottleNameController.text,
-            'amount': amountSelected,
+            'amount':
+                enabled ? double.parse(enteredAmount.text) : amountSelected,
           }));
       preferences.setString('personInfo', gender);
       widget.moveAppIndexToHome();
