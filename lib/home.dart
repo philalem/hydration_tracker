@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:hydratee/addSpecificAmounts.dart';
-import 'package:hydratee/changeBottleNameAndSize.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hydratee/addSpecificAmounts.dart';
+import 'package:hydratee/changeBottleNameAndSize.dart';
 import 'package:intl/intl.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -101,232 +101,241 @@ class _HomeState extends State<Home> {
               ),
             ),
           ),
+          CupertinoSliverRefreshControl(
+            refreshIndicatorExtent: 1,
+            onRefresh: () => refreshPage(),
+          ),
           SliverList(
             delegate: SliverChildListDelegate(
               <Widget>[
                 FutureBuilder(
-                    future: getStoredData(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState != ConnectionState.done) {
-                        return Align(
-                          alignment: Alignment.center,
-                          child: CupertinoActivityIndicator(),
-                        );
-                      }
-                      return Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                FittedBox(
-                                  fit: BoxFit.contain,
-                                  child: Text(
-                                    'Today\'s water intake',
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            CircularPercentIndicator(
-                              radius: width - 160,
-                              animation: true,
-                              animationDuration: 1200,
-                              animateFromLastPercent: true,
-                              lineWidth: 15.0,
-                              percent: percent,
-                              center: Container(
-                                width: width - 200,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        "${(percent * 100).floor().toInt()}% hydrated",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 26.0),
-                                      ),
-                                    ),
-                                    FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        todaysDifference > 0
-                                            ? "${((percent - 1).abs() * 100).ceil().toInt()}% to go!"
-                                            : "Awesome job!",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 26.0),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              circularStrokeCap: CircularStrokeCap.butt,
-                              backgroundColor: Colors.grey,
-                              progressColor: Colors.blue,
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text('Goal: $waterGoal oz'),
-                            Text('Amount today: ${todaysAmount['amount']} oz'),
-                            Text(
-                                'Amount remaining: ${todaysDifference > 0 ? todaysDifference.toString() : 0.toString()} oz'),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: "Add your ",
-                                    ),
-                                    TextSpan(
-                                      text: '${bottleInfo['name']}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    TextSpan(
-                                      text: " to your daily intake.",
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            CupertinoButton(
-                              color: Colors.blue,
-                              onPressed: () async {
-                                if (todaysAmount['amount'] +
-                                        bottleInfo['amount'] >
-                                    240.0) {
-                                  todaysAmount['amount'] = 240.0;
-                                  showMaxAmountAlert();
-                                } else {
-                                  todaysAmount['amount'] =
-                                      todaysAmount['amount'] +
-                                          bottleInfo['amount'];
-                                }
-                                double tempPercent =
-                                    todaysAmount['amount'] / waterGoal > 1
-                                        ? 1.0
-                                        : todaysAmount['amount'] / waterGoal;
-                                percent = tempPercent;
-                                preferences.setString(
-                                    'todaysAmount', jsonEncode(todaysAmount));
-                                setState(() {});
-                              },
-                              child: Text(
-                                'Add',
-                              ),
-                            ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            CupertinoButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () => Navigator.of(context)
-                                  .push(CupertinoPageRoute(
-                                    builder: (context) => AddSpecificAmount(
-                                      todaysAmount: todaysAmount,
-                                    ),
-                                  ))
-                                  .then((value) => setState(() => print(
-                                      'Refreshing page after pop back over.'))),
-                              child: Text(
-                                'Or add a another amount',
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            AspectRatio(
-                              aspectRatio: 1.53,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(18)),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.blue[600],
-                                      Colors.blue,
-                                    ],
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
-                                  ),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  children: <Widget>[
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Container(
-                                      margin:
-                                          EdgeInsets.symmetric(horizontal: 30),
-                                      child: FittedBox(
-                                        fit: BoxFit.contain,
-                                        child: Text(
-                                          'Water Intake Over Time',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 32,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 2),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            right: 16.0, left: 6.0),
-                                        child: LineChart(
-                                          sampleData1(),
-                                          swapAnimationDuration:
-                                              const Duration(milliseconds: 250),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                  future: getStoredData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: CupertinoActivityIndicator(),
                       );
-                    }),
+                    }
+                    return Container(
+                      margin:
+                          EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  'Today\'s water intake',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          CircularPercentIndicator(
+                            radius: width - 160,
+                            animation: true,
+                            animationDuration: 1200,
+                            animateFromLastPercent: true,
+                            lineWidth: 15.0,
+                            percent: percent,
+                            center: Container(
+                              width: width - 200,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      "${(percent * 100).floor().toInt()}% hydrated",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 26.0),
+                                    ),
+                                  ),
+                                  FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(
+                                      todaysDifference > 0
+                                          ? "${((percent - 1).abs() * 100).ceil().toInt()}% to go!"
+                                          : "Awesome job!",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 26.0),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            circularStrokeCap: CircularStrokeCap.butt,
+                            backgroundColor: Colors.grey,
+                            progressColor: Colors.blue,
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          Text('Goal: $waterGoal oz'),
+                          Text('Amount today: ${todaysAmount['amount']} oz'),
+                          Text(
+                              'Amount remaining: ${todaysDifference > 0 ? todaysDifference.toString() : 0.toString()} oz'),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                ),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Add your ",
+                                  ),
+                                  TextSpan(
+                                    text: '${bottleInfo['name']}',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  TextSpan(
+                                    text: " to your daily intake.",
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          CupertinoButton(
+                            color: Colors.blue,
+                            onPressed: () async {
+                              if (todaysAmount['amount'] +
+                                      bottleInfo['amount'] >
+                                  240.0) {
+                                todaysAmount['amount'] = 240.0;
+                                showMaxAmountAlert();
+                              } else {
+                                todaysAmount['amount'] =
+                                    todaysAmount['amount'] +
+                                        bottleInfo['amount'];
+                              }
+                              double tempPercent =
+                                  todaysAmount['amount'] / waterGoal > 1
+                                      ? 1.0
+                                      : todaysAmount['amount'] / waterGoal;
+                              percent = tempPercent;
+                              preferences.setString(
+                                  'todaysAmount', jsonEncode(todaysAmount));
+                              setState(() {});
+                            },
+                            child: Text(
+                              'Add',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CupertinoButton(
+                            padding: EdgeInsets.zero,
+                            onPressed: () => Navigator.of(context)
+                                .push(CupertinoPageRoute(
+                                  builder: (context) => AddSpecificAmount(
+                                    todaysAmount: todaysAmount,
+                                  ),
+                                ))
+                                .then((value) => setState(() => print(
+                                    'Refreshing page after pop back over.'))),
+                            child: Text(
+                              'Or add a another amount',
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          AspectRatio(
+                            aspectRatio: 1.53,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(18)),
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.blue[600],
+                                    Colors.blue,
+                                  ],
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Container(
+                                    margin:
+                                        EdgeInsets.symmetric(horizontal: 30),
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(
+                                        'Water Intake Over Time',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 2),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          right: 16.0, left: 6.0),
+                                      child: LineChart(
+                                        sampleData1(),
+                                        swapAnimationDuration:
+                                            const Duration(milliseconds: 250),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future refreshPage() {
+    Future.delayed(Duration(seconds: 1));
+    setState(() => print('Refreshing page'));
   }
 
   LineChartData sampleData1() {

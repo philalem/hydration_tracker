@@ -30,6 +30,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   TextEditingController bottleNameController = TextEditingController();
   TextEditingController enteredAmount = TextEditingController();
   bool enabled = true;
+  FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
@@ -116,11 +117,15 @@ class _InitialQuestionsState extends State<InitialQuestions> {
     } else if (bottleNameController.text != null &&
         bottleNameController.text != '' &&
         questionViewIndex == 1) {
-      setState(() => questionViewIndex = 2);
-    } else if ((bottleSizeSelected[0] ||
-            bottleSizeSelected[1] ||
-            bottleSizeSelected[2] ||
-            bottleSizeSelected[3]) &&
+      setState(() {
+        focusNode.unfocus();
+        questionViewIndex = 2;
+      });
+    } else if (((bottleSizeSelected[0] ||
+                bottleSizeSelected[1] ||
+                bottleSizeSelected[2] ||
+                bottleSizeSelected[3]) ||
+            enteredAmount != null && enabled) &&
         questionViewIndex == 0) {
       setState(() => questionViewIndex = 1);
     }
@@ -145,6 +150,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
             height: 20,
           ),
           CupertinoTextField(
+            focusNode: focusNode,
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(bottom: BorderSide(color: Colors.blue, width: 1)),
@@ -266,6 +272,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   }
 
   _updateBottleSelection(numberSelected) {
+    focusNode.unfocus();
     switch (numberSelected) {
       case 0:
         setState(() {

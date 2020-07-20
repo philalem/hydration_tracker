@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class EnterBottleName extends StatefulWidget {
   EnterBottleName({this.choice, this.bottleNameController});
 
-  final int choice;
+  final double choice;
   final TextEditingController bottleNameController;
   @override
   _EnterBottleNameState createState() => _EnterBottleNameState();
@@ -33,7 +33,7 @@ class _EnterBottleNameState extends State<EnterBottleName> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Icon(
-                      widget.choice == 'Glass of water'
+                      widget.choice == 8.0
                           ? GlassOfWater.glassofwater
                           : MyFlutterApp.water_bottle,
                       size: 100,
