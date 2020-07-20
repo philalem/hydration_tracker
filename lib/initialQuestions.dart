@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
+import 'package:flutter/services.dart';
 import 'package:hydratee/animatedIndexedStack.dart';
 import 'package:hydratee/enterBottleName.dart';
 import 'package:hydratee/genderInfo.dart';
@@ -26,6 +28,8 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   double amountSelected = 0;
   String gender;
   TextEditingController bottleNameController = TextEditingController();
+  TextEditingController enteredAmount = TextEditingController();
+  bool enabled = true;
 
   @override
   void initState() {
@@ -140,6 +144,30 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           SizedBox(
             height: 20,
           ),
+          CupertinoTextField(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(bottom: BorderSide(color: Colors.blue, width: 1)),
+            ),
+            autofocus: false,
+            textInputAction: TextInputAction.done,
+            maxLines: 1,
+            minLines: 1,
+            placeholderStyle: TextStyle(color: Colors.black54),
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            enabled: enabled,
+            controller: enteredAmount,
+            keyboardType: TextInputType.numberWithOptions(
+              decimal: true,
+              signed: false,
+            ),
+            inputFormatters: [
+              DecimalTextInputFormatter(intRange: 3, decimalRange: 2)
+            ],
+            placeholder: 'Or enter your own.',
+          ),
         ],
       ),
     );
@@ -246,9 +274,11 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[2] = false;
           bottleSizeSelected[3] = false;
           if (bottleSizeSelected[0]) {
+            enabled = false;
             amountSelected = 8;
           } else {
             amountSelected = 0;
+            enabled = true;
           }
         });
         break;
@@ -259,9 +289,11 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[2] = false;
           bottleSizeSelected[3] = false;
           if (bottleSizeSelected[1]) {
+            enabled = false;
             amountSelected = 16;
           } else {
             amountSelected = 0;
+            enabled = true;
           }
         });
         break;
@@ -272,9 +304,11 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[2] = !bottleSizeSelected[2];
           bottleSizeSelected[3] = false;
           if (bottleSizeSelected[2]) {
+            enabled = false;
             amountSelected = 24;
           } else {
             amountSelected = 0;
+            enabled = true;
           }
         });
         break;
@@ -286,8 +320,10 @@ class _InitialQuestionsState extends State<InitialQuestions> {
           bottleSizeSelected[3] = !bottleSizeSelected[3];
           if (bottleSizeSelected[3]) {
             amountSelected = 32;
+            enabled = false;
           } else {
             amountSelected = 0;
+            enabled = true;
           }
         });
         break;
@@ -297,18 +333,68 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   }
 
   getChoice() {
+    if (enabled && enteredAmount.text.isNotEmpty) {
+      return double.parse(enteredAmount.text);
+    }
     if (bottleSizeSelected[0]) {
-      return 8;
+      return 8.0;
     }
     if (bottleSizeSelected[1]) {
-      return 16;
+      return 16.0;
     }
     if (bottleSizeSelected[2]) {
-      return 24;
+      return 24.0;
     }
     if (bottleSizeSelected[3]) {
-      return 32;
+      return 32.0;
     }
-    return 8;
+    return 8.0;
+  }
+}
+
+class DecimalTextInputFormatter extends TextInputFormatter {
+  DecimalTextInputFormatter({this.decimalRange, this.intRange})
+      : assert(decimalRange == null || decimalRange > 0),
+        assert(intRange == null || intRange > 0);
+
+  final int decimalRange;
+  final int intRange;
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    TextSelection newSelection = newValue.selection;
+    String truncated = newValue.text;
+
+    if (decimalRange != null) {
+      String value = newValue.text;
+
+      if (value.contains(".") &&
+          value.substring(value.indexOf(".") + 1).length > decimalRange) {
+        truncated = oldValue.text;
+        newSelection = oldValue.selection;
+      } else if (value.contains(".") &&
+              value.substring(0, value.indexOf(".")).length > intRange ||
+          !value.contains(".") && value.length > intRange) {
+        truncated = oldValue.text;
+        newSelection = oldValue.selection;
+      } else if (value == ".") {
+        truncated = "0.";
+
+        newSelection = newValue.selection.copyWith(
+          baseOffset: math.min(truncated.length, truncated.length + 1),
+          extentOffset: math.min(truncated.length, truncated.length + 1),
+        );
+      }
+
+      return TextEditingValue(
+        text: truncated,
+        selection: newSelection,
+        composing: TextRange.empty,
+      );
+    }
+    return newValue;
   }
 }
