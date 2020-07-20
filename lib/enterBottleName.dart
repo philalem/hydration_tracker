@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class EnterBottleName extends StatefulWidget {
   EnterBottleName({this.choice, this.bottleNameController});
 
-  final String choice;
+  final int choice;
   final TextEditingController bottleNameController;
   @override
   _EnterBottleNameState createState() => _EnterBottleNameState();
@@ -39,7 +39,9 @@ class _EnterBottleNameState extends State<EnterBottleName> {
                       size: 100,
                       color: Colors.blue,
                     ),
-                    Text(widget.choice),
+                    Text(widget.choice == 8
+                        ? 'Glass of water'
+                        : widget.choice.toString() + ' oz'),
                   ],
                 ),
               ),

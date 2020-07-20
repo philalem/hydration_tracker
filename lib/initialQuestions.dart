@@ -298,17 +298,17 @@ class _InitialQuestionsState extends State<InitialQuestions> {
 
   getChoice() {
     if (bottleSizeSelected[0]) {
-      return 'Glass of water';
+      return 8;
     }
     if (bottleSizeSelected[1]) {
-      return '16 oz';
+      return 16;
     }
     if (bottleSizeSelected[2]) {
-      return '24 oz';
+      return 24;
     }
     if (bottleSizeSelected[3]) {
-      return '32 oz';
+      return 32;
     }
-    return 'Glass of water';
+    return 8;
   }
 }
