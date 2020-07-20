@@ -164,7 +164,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
               signed: false,
             ),
             inputFormatters: [
-              DecimalTextInputFormatter(intRange: 3, decimalRange: 2)
+              DecimalTextInputFormatter(intRange: 2, decimalRange: 2)
             ],
             placeholder: 'Or enter your own.',
           ),
