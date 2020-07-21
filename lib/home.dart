@@ -22,7 +22,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool isShowingMainData;
-  Map<String, dynamic> todaysAmount;
+  Map<String, dynamic> todaysAmount = {};
   double todaysDifference;
   Map<String, dynamic> bottleInfo;
   SharedPreferences preferences;
@@ -30,40 +30,47 @@ class _HomeState extends State<Home> {
   List<String> amounts;
   double waterGoal;
 
-  Future<Map<String, dynamic>> getStoredData() async {
-    await Future.delayed(Duration(seconds: 2));
-    preferences = await SharedPreferences.getInstance();
-    DateTime date = DateTime.now();
-    final today = DateTime(date.year, date.month, date.day);
-    amounts = preferences.getStringList('amounts') ?? [];
-    var todaysJsonAmount = preferences.getString('todaysAmount');
-    todaysAmount = todaysJsonAmount == null
-        ? {'amount': 0.0, 'date': today.toIso8601String()}
-        : jsonDecode(todaysJsonAmount);
-    DateTime storedDate =
-        DateTime.parse(restrictFractionalSeconds(todaysAmount['date']));
-    String retrievedPersonInfo = preferences.getString('personInfo');
-    waterGoal = retrievedPersonInfo == 'Female' ? 91 : 125;
-    if (today.day != storedDate.day ||
-        today.month != storedDate.month ||
-        today.year != storedDate.year) {
-      // TODO: add the dates in between to be 0 oz intake
-      amounts.add(jsonEncode(todaysAmount));
-      preferences.setStringList('amounts', amounts);
-      todaysAmount = {'amount': 0.0, 'date': today.toIso8601String()};
-    }
-    percent = todaysAmount['amount'] / waterGoal > 1
-        ? 1.0
-        : todaysAmount['amount'] / waterGoal;
-    var bottleJsonInfo = preferences.getString('bottleInfo');
-    bottleInfo = bottleJsonInfo != null
-        ? jsonDecode(preferences.getString('bottleInfo'))
-        : {
-            'name': 'water cup',
-            'amount': 8,
-          };
-    todaysDifference = waterGoal - todaysAmount['amount'];
-    return todaysAmount;
+  @override
+  void initState() {
+    super.initState();
+    initializeData();
+  }
+
+  void initializeData() {
+    SharedPreferences.getInstance().then((prefs) {
+      preferences = prefs;
+      DateTime date = DateTime.now();
+      final today = DateTime(date.year, date.month, date.day);
+      amounts = preferences.getStringList('amounts') ?? [];
+      var todaysJsonAmount = preferences.getString('todaysAmount');
+      todaysAmount = todaysJsonAmount == null
+          ? {'amount': 0.0, 'date': today.toIso8601String()}
+          : jsonDecode(todaysJsonAmount);
+      DateTime storedDate =
+          DateTime.parse(restrictFractionalSeconds(todaysAmount['date']));
+      String retrievedPersonInfo = preferences.getString('personInfo');
+      waterGoal = retrievedPersonInfo == 'Female' ? 91 : 125;
+      if (today.day != storedDate.day ||
+          today.month != storedDate.month ||
+          today.year != storedDate.year) {
+        // TODO: add the dates in between to be 0 oz intake
+        amounts.add(jsonEncode(todaysAmount));
+        preferences.setStringList('amounts', amounts);
+        todaysAmount = {'amount': 0.0, 'date': today.toIso8601String()};
+      }
+      percent = todaysAmount['amount'] / waterGoal > 1
+          ? 1.0
+          : todaysAmount['amount'] / waterGoal;
+      var bottleJsonInfo = preferences.getString('bottleInfo');
+      bottleInfo = bottleJsonInfo != null
+          ? jsonDecode(preferences.getString('bottleInfo'))
+          : {
+              'name': 'water cup',
+              'amount': 8,
+            };
+      todaysDifference = waterGoal - todaysAmount['amount'];
+      setState(() {});
+    });
   }
 
   String restrictFractionalSeconds(String dateTime) =>
@@ -92,8 +99,7 @@ class _HomeState extends State<Home> {
                       size: bottleInfo['amount'],
                     ),
                   ))
-                  .then((value) =>
-                      setState(() => print('refreshed after bottle rename'))),
+                  .then((value) => initializeData()),
               padding: EdgeInsets.zero,
               child: Icon(
                 threeDots,
@@ -130,199 +136,112 @@ class _HomeState extends State<Home> {
                       SizedBox(
                         height: 20,
                       ),
-                      FutureBuilder(
-                          future: getStoredData(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState !=
-                                ConnectionState.done) {
-                              return CircularPercentIndicator(
-                                radius: width - 160,
-                                animation: true,
-                                animationDuration: 1200,
-                                animateFromLastPercent: true,
-                                lineWidth: 15.0,
-                                percent: percent,
-                                center: Container(
-                                  width: width - 200,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      FittedBox(
-                                        fit: BoxFit.contain,
-                                        child: CupertinoActivityIndicator(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                circularStrokeCap: CircularStrokeCap.butt,
-                                backgroundColor: Colors.grey,
-                                progressColor: Colors.blue,
-                              );
-                            }
-                            return CircularPercentIndicator(
-                              radius: width - 160,
-                              animation: true,
-                              animationDuration: 1200,
-                              animateFromLastPercent: true,
-                              lineWidth: 15.0,
-                              percent: percent,
-                              center: Container(
-                                width: width - 200,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        "${(percent * 100).floor().toInt()}% hydrated",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 26.0),
-                                      ),
-                                    ),
-                                    FittedBox(
-                                      fit: BoxFit.contain,
-                                      child: Text(
-                                        todaysDifference > 0
-                                            ? "${((percent - 1).abs() * 100).ceil().toInt()}% to go!"
-                                            : "Awesome job!",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 26.0),
-                                      ),
-                                    ),
-                                  ],
+                      CircularPercentIndicator(
+                        radius: width - 160,
+                        animation: true,
+                        animationDuration: 1200,
+                        animateFromLastPercent: true,
+                        lineWidth: 15.0,
+                        percent: percent,
+                        center: Container(
+                          width: width - 200,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  "${(percent * 100).floor().toInt()}% hydrated",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 26.0),
                                 ),
                               ),
-                              circularStrokeCap: CircularStrokeCap.butt,
-                              backgroundColor: Colors.grey,
-                              progressColor: Colors.blue,
-                            );
-                          }),
+                              FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text(
+                                  todaysDifference != null
+                                      ? todaysDifference > 0
+                                          ? "${((percent - 1).abs() * 100).ceil().toInt()}% to go!"
+                                          : "Awesome job!"
+                                      : ' ',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 26.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        circularStrokeCap: CircularStrokeCap.butt,
+                        backgroundColor: Colors.grey,
+                        progressColor: Colors.blue,
+                      ),
                       SizedBox(
                         height: 20,
                       ),
-                      FutureBuilder(
-                          future: getStoredData(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState !=
-                                ConnectionState.done) {
-                              return Column(
-                                children: <Widget>[
-                                  Text('Goal: XXX.XX oz'),
-                                  Text('Amount today: XXX.XX oz'),
-                                  Text('Amount remaining: XXX.XX oz'),
-                                ],
-                              );
-                            }
-                            return Column(
-                              children: <Widget>[
-                                Text('Goal: $waterGoal oz'),
-                                Text(
-                                    'Amount today: ${todaysAmount['amount']} oz'),
-                                Text(
-                                    'Amount remaining: ${todaysDifference > 0 ? todaysDifference.toString() : 0.toString()} oz'),
-                              ],
-                            );
-                          }),
+                      Column(
+                        children: <Widget>[
+                          Text('Goal: $waterGoal oz'),
+                          Text('Amount today: ${todaysAmount['amount']} oz'),
+                          Text(
+                              'Amount remaining: ${todaysDifference != null ? todaysDifference > 0 ? todaysDifference.toString() : 0.toString() : ''} oz'),
+                        ],
+                      ),
                       SizedBox(
                         height: 20,
                       ),
                       FittedBox(
                         fit: BoxFit.contain,
-                        child: FutureBuilder(
-                            future: getStoredData(),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState !=
-                                  ConnectionState.done) {
-                                return RichText(
-                                  text: TextSpan(
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20,
-                                    ),
-                                    children: <TextSpan>[
-                                      TextSpan(
-                                        text: "Add your ",
-                                      ),
-                                      TextSpan(
-                                        text: 'bottle',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      TextSpan(
-                                        text: " to your daily intake.",
-                                      )
-                                    ],
-                                  ),
-                                );
-                              }
-                              return RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 20,
-                                  ),
-                                  children: <TextSpan>[
-                                    TextSpan(
-                                      text: "Add your ",
-                                    ),
-                                    TextSpan(
-                                      text: '${bottleInfo['name']}',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    TextSpan(
-                                      text: " to your daily intake.",
-                                    )
-                                  ],
-                                ),
-                              );
-                            }),
+                        child: RichText(
+                          text: TextSpan(
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "Add your ",
+                              ),
+                              TextSpan(
+                                text:
+                                    '${bottleInfo != null ? bottleInfo['name'] : 'bottle'}',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              TextSpan(
+                                text: " to your daily intake.",
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      FutureBuilder(
-                          future: getStoredData(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState !=
-                                ConnectionState.done) {
-                              return CupertinoButton(
-                                color: Colors.blue,
-                                onPressed: () => print('still loading'),
-                                child: Text(
-                                  'Add',
-                                ),
-                              );
-                            }
-                            return CupertinoButton(
-                              color: Colors.blue,
-                              onPressed: () async {
-                                if (todaysAmount['amount'] +
-                                        bottleInfo['amount'] >
-                                    240.0) {
-                                  todaysAmount['amount'] = 240.0;
-                                  showMaxAmountAlert();
-                                } else {
-                                  todaysAmount['amount'] =
-                                      todaysAmount['amount'] +
-                                          bottleInfo['amount'];
-                                }
-                                double tempPercent =
-                                    todaysAmount['amount'] / waterGoal > 1
-                                        ? 1.0
-                                        : todaysAmount['amount'] / waterGoal;
-                                percent = tempPercent;
-                                preferences.setString(
-                                    'todaysAmount', jsonEncode(todaysAmount));
-                                setState(() {});
-                              },
-                              child: Text(
-                                'Add',
-                              ),
-                            );
-                          }),
+                      CupertinoButton(
+                        color: Colors.blue,
+                        onPressed: () {
+                          if (todaysAmount['amount'] + bottleInfo['amount'] >
+                              240.0) {
+                            todaysAmount['amount'] = 240.0;
+                            showMaxAmountAlert();
+                          } else {
+                            todaysAmount['amount'] =
+                                todaysAmount['amount'] + bottleInfo['amount'];
+                          }
+                          double tempPercent =
+                              todaysAmount['amount'] / waterGoal > 1
+                                  ? 1.0
+                                  : todaysAmount['amount'] / waterGoal;
+                          percent = tempPercent;
+                          preferences.setString(
+                              'todaysAmount', jsonEncode(todaysAmount));
+                          setState(() {});
+                        },
+                        child: Text(
+                          'Add',
+                        ),
+                      ),
                       SizedBox(
                         height: 10,
                       ),
@@ -386,22 +305,11 @@ class _HomeState extends State<Home> {
                                 child: Padding(
                                   padding: const EdgeInsets.only(
                                       right: 16.0, left: 6.0),
-                                  child: FutureBuilder(
-                                      future: getStoredData(),
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState !=
-                                            ConnectionState.done) {
-                                          return Align(
-                                            alignment: Alignment.center,
-                                            child: CupertinoActivityIndicator(),
-                                          );
-                                        }
-                                        return LineChart(
-                                          sampleData1(),
-                                          swapAnimationDuration:
-                                              const Duration(milliseconds: 250),
-                                        );
-                                      }),
+                                  child: LineChart(
+                                    sampleData1(),
+                                    swapAnimationDuration:
+                                        const Duration(milliseconds: 250),
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -423,7 +331,9 @@ class _HomeState extends State<Home> {
   }
 
   Future refreshPage() async {
-    setState(() => print('Refreshing page'));
+    initializeData();
+    await Future.delayed(Duration(seconds: 2));
+    print('Refreshing page');
   }
 
   LineChartData sampleData1() {
@@ -441,7 +351,7 @@ class _HomeState extends State<Home> {
             show: true,
           ),
           color: Colors.amber,
-          y: waterGoal,
+          y: waterGoal != null ? waterGoal : 125,
         )
       ]),
       lineTouchData: LineTouchData(
@@ -513,6 +423,7 @@ class _HomeState extends State<Home> {
   }
 
   List<FlSpot> getHydrationData() {
+    if (amounts == null) return [FlSpot(0.0, 0.0)];
     List<FlSpot> allAmounts = amounts.map((pastAmount) {
       var decodedAmount = jsonDecode(pastAmount);
       return FlSpot(
