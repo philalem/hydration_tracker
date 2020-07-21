@@ -119,7 +119,12 @@ class _HomeState extends State<Home> {
             delegate: SliverChildListDelegate(
               <Widget>[
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+                  margin: EdgeInsets.only(
+                    top: 20,
+                    left: 20,
+                    right: 20,
+                    bottom: 40,
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -191,14 +196,17 @@ class _HomeState extends State<Home> {
                           Text(
                             'Goal: $waterGoal oz',
                             textScaleFactor: 1.0,
+                            style: TextStyle(fontSize: 20),
                           ),
                           Text(
-                            'Amount today: ${todaysAmount['amount']} oz',
+                            'Today\'s intake: ${todaysAmount['amount']} oz',
                             textScaleFactor: 1.0,
+                            style: TextStyle(fontSize: 20),
                           ),
                           Text(
                             'Amount remaining: ${todaysDifference != null ? todaysDifference > 0 ? todaysDifference.toString() : 0.toString() : ''} oz',
                             textScaleFactor: 1.0,
+                            style: TextStyle(fontSize: 20),
                           ),
                         ],
                       ),
@@ -207,58 +215,93 @@ class _HomeState extends State<Home> {
                       ),
                       FittedBox(
                         fit: BoxFit.contain,
-                        child: RichText(
-                          text: TextSpan(
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: "Add your ",
-                              ),
-                              TextSpan(
-                                text:
-                                    '${bottleInfo != null ? bottleInfo['name'] : 'bottle'}',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              TextSpan(
-                                text: " to your daily intake.",
-                              )
-                            ],
-                          ),
+                        child: Text(
+                          'Add or remove',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          '${bottleInfo != null ? bottleInfo['name'] : 'bottle'}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: Text(
+                          'from your daily intake',
+                          style: TextStyle(fontSize: 20),
                         ),
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      CupertinoButton(
-                        color: Colors.blue,
-                        onPressed: () {
-                          if (todaysAmount['amount'] + bottleInfo['amount'] >
-                              240.0) {
-                            todaysAmount['amount'] = 240.0;
-                            showMaxAmountAlert();
-                          } else {
-                            todaysAmount['amount'] =
-                                todaysAmount['amount'] + bottleInfo['amount'];
-                          }
-                          double tempPercent =
-                              todaysAmount['amount'] / waterGoal > 1
-                                  ? 1.0
-                                  : todaysAmount['amount'] / waterGoal;
-                          percent = tempPercent;
-                          preferences.setString(
-                              'todaysAmount', jsonEncode(todaysAmount));
-                          setState(() {});
-                        },
-                        child: Text(
-                          'Add',
-                          textScaleFactor: 1.0,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          CupertinoButton(
+                            color: Colors.blue,
+                            onPressed: () {
+                              if (todaysAmount['amount'] +
+                                      bottleInfo['amount'] >
+                                  240.0) {
+                                todaysAmount['amount'] = 240.0;
+                                showMaxAmountAlert();
+                              } else {
+                                todaysAmount['amount'] =
+                                    todaysAmount['amount'] +
+                                        bottleInfo['amount'];
+                              }
+                              double tempPercent =
+                                  todaysAmount['amount'] / waterGoal > 1
+                                      ? 1.0
+                                      : todaysAmount['amount'] / waterGoal;
+                              percent = tempPercent;
+                              preferences.setString(
+                                  'todaysAmount', jsonEncode(todaysAmount));
+                              setState(() {});
+                            },
+                            child: Text(
+                              'Add',
+                              textScaleFactor: 1.0,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CupertinoButton(
+                            color: Colors.red,
+                            onPressed: () {
+                              if (todaysAmount['amount'] -
+                                      bottleInfo['amount'] <
+                                  0.0) {
+                                todaysAmount['amount'] = 0.0;
+                              } else {
+                                todaysAmount['amount'] =
+                                    todaysAmount['amount'] -
+                                        bottleInfo['amount'];
+                              }
+                              double tempPercent =
+                                  todaysAmount['amount'] / waterGoal > 1
+                                      ? 1.0
+                                      : todaysAmount['amount'] / waterGoal;
+                              percent = tempPercent;
+                              preferences.setString(
+                                  'todaysAmount', jsonEncode(todaysAmount));
+                              setState(() {});
+                            },
+                            child: Text(
+                              'Remove',
+                              textScaleFactor: 1.0,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                        ],
                       ),
                       CupertinoButton(
                         padding: EdgeInsets.zero,
@@ -270,7 +313,7 @@ class _HomeState extends State<Home> {
                             ))
                             .then((value) => initializeData()),
                         child: Text(
-                          'Or add a another amount',
+                          'Or add or remove a custom amount',
                           textScaleFactor: 1.0,
                         ),
                       ),

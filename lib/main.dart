@@ -128,6 +128,10 @@ class Hydratee extends StatelessWidget {
           primaryColor: Colors.blue,
           brightness: Brightness.light),
       home: Wrapper(),
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: child,
+      ),
     );
   }
 }
