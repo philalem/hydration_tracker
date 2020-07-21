@@ -37,7 +37,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
       navigationBar: CupertinoNavigationBar(
         brightness: Brightness.light,
         backgroundColor: Colors.transparent,
-        middle: Text('Add a specific amount of water', textScaleFactor: 1.0),
+        middle: Text('Add or remove water', textScaleFactor: 1.0),
         trailing: CupertinoButton(
           onPressed: () async {
             SharedPreferences preferences =
@@ -132,6 +132,40 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
             ],
             onTap: () => _enableTextField(),
             placeholder: 'Ex: 12.5s',
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(5),
+                  child: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () => _addAmount(),
+                    color: Colors.blue,
+                    child: Text(
+                      'Add',
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(5),
+                  child: CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () => _removeAmount(),
+                    color: Colors.red,
+                    child: Text(
+                      'Remove',
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -228,6 +262,57 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
         ),
       ],
     );
+  }
+
+  _addAmount() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (amountSelected != 0.0 || enteredAmount.text.isNotEmpty) {
+      if (enabled) {
+        if (widget.todaysAmount['amount'] + double.parse(enteredAmount.text) >
+            240.0) {
+          widget.todaysAmount['amount'] = 240.0;
+          showMaxAmountAlert();
+        } else {
+          widget.todaysAmount['amount'] =
+              widget.todaysAmount['amount'] + double.parse(enteredAmount.text);
+          Navigator.of(context).pop();
+        }
+      } else {
+        if (widget.todaysAmount['amount'] + amountSelected > 240.0) {
+          widget.todaysAmount['amount'] = 240.0;
+          showMaxAmountAlert();
+        } else {
+          widget.todaysAmount['amount'] =
+              widget.todaysAmount['amount'] + amountSelected;
+          Navigator.of(context).pop();
+        }
+      }
+      preferences.setString('todaysAmount', jsonEncode(widget.todaysAmount));
+    }
+  }
+
+  _removeAmount() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    if (amountSelected != 0.0 || enteredAmount.text.isNotEmpty) {
+      if (enabled) {
+        if (widget.todaysAmount['amount'] - double.parse(enteredAmount.text) <
+            0.0) {
+          widget.todaysAmount['amount'] = 0.0;
+        } else {
+          widget.todaysAmount['amount'] =
+              widget.todaysAmount['amount'] - double.parse(enteredAmount.text);
+        }
+      } else {
+        if (widget.todaysAmount['amount'] - amountSelected < 0.0) {
+          widget.todaysAmount['amount'] = 0.0;
+        } else {
+          widget.todaysAmount['amount'] =
+              widget.todaysAmount['amount'] - amountSelected;
+        }
+      }
+      Navigator.of(context).pop();
+      preferences.setString('todaysAmount', jsonEncode(widget.todaysAmount));
+    }
   }
 
   _updateBottleSelection(numberSelected) {
