@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'package:hydratee/glass_of_water_icons.dart';
+import 'package:hydratee/initialQuestions.dart';
 import 'package:hydratee/my_flutter_app_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +26,15 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
   double amountSelected = 0;
   int questionViewIndex = 0;
   Widget questionView;
+  TextEditingController enteredName;
   TextEditingController enteredAmount;
+  FocusNode focusNode = FocusNode();
+  bool enabled = false;
 
   @override
   void initState() {
-    enteredAmount = TextEditingController(text: widget.name);
+    enteredName = TextEditingController(text: widget.name);
+    enteredAmount = TextEditingController();
     updatePreSelection();
     questionView = selectBottleSize();
     super.initState();
@@ -39,15 +44,15 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
     double previousSelection = widget.size;
     if (previousSelection == 8.0) {
       bottleSizeSelected[0] = true;
-    }
-    if (previousSelection == 16.0) {
+    } else if (previousSelection == 16.0) {
       bottleSizeSelected[1] = true;
-    }
-    if (previousSelection == 24.0) {
+    } else if (previousSelection == 24.0) {
       bottleSizeSelected[2] = true;
-    }
-    if (previousSelection == 32.0) {
+    } else if (previousSelection == 32.0) {
       bottleSizeSelected[3] = true;
+    } else {
+      enabled = true;
+      enteredAmount = TextEditingController(text: previousSelection.toString());
     }
     setState(() {});
   }
@@ -64,13 +69,15 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
             SharedPreferences preferences =
                 await SharedPreferences.getInstance();
             if (amountSelected != 0 ||
-                enteredAmount.text != null ||
-                enteredAmount.text != '') {
+                enteredName.text != null ||
+                enteredName.text != '') {
               preferences.setString(
                   'bottleInfo',
                   jsonEncode({
-                    'name': enteredAmount.text,
-                    'amount': amountSelected,
+                    'name': enteredName.text,
+                    'amount': enabled
+                        ? double.parse(enteredAmount.text)
+                        : amountSelected,
                   }));
             }
             Navigator.of(context).pop();
@@ -106,6 +113,34 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
           SizedBox(
             height: 20,
           ),
+          CupertinoTextField(
+            focusNode: focusNode,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(bottom: BorderSide(color: Colors.blue, width: 1)),
+            ),
+            autofocus: false,
+            textInputAction: TextInputAction.done,
+            maxLines: 1,
+            minLines: 1,
+            placeholderStyle: TextStyle(color: Colors.black54),
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            onTap: () => _enableTextField(),
+            controller: enteredAmount,
+            keyboardType: TextInputType.numberWithOptions(
+              decimal: true,
+              signed: false,
+            ),
+            inputFormatters: [
+              DecimalTextInputFormatter(intRange: 2, decimalRange: 2)
+            ],
+            placeholder: 'Or enter your own',
+          ),
+          SizedBox(
+            height: 20,
+          ),
           Text(
             'Nickname',
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -127,7 +162,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
             style: TextStyle(
               color: Colors.black,
             ),
-            controller: enteredAmount,
+            controller: enteredName,
             placeholder: 'Ex: Blue Hydroflask',
           ),
         ],
@@ -228,32 +263,52 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
   }
 
   _updateBottleSelection(numberSelected) {
+    focusNode.unfocus();
+    enteredAmount.clear();
     switch (numberSelected) {
       case 0:
         setState(() {
-          bottleSizeSelected[0] = true;
+          bottleSizeSelected[0] = !bottleSizeSelected[0];
           bottleSizeSelected[1] = false;
           bottleSizeSelected[2] = false;
           bottleSizeSelected[3] = false;
-          amountSelected = 8;
+          if (bottleSizeSelected[0]) {
+            enabled = false;
+            amountSelected = 8;
+          } else {
+            amountSelected = 0;
+            enabled = true;
+          }
         });
         break;
       case 1:
         setState(() {
           bottleSizeSelected[0] = false;
-          bottleSizeSelected[1] = true;
+          bottleSizeSelected[1] = !bottleSizeSelected[1];
           bottleSizeSelected[2] = false;
           bottleSizeSelected[3] = false;
-          amountSelected = 16;
+          if (bottleSizeSelected[1]) {
+            enabled = false;
+            amountSelected = 16;
+          } else {
+            amountSelected = 0;
+            enabled = true;
+          }
         });
         break;
       case 2:
         setState(() {
           bottleSizeSelected[0] = false;
           bottleSizeSelected[1] = false;
-          bottleSizeSelected[2] = true;
+          bottleSizeSelected[2] = !bottleSizeSelected[2];
           bottleSizeSelected[3] = false;
-          amountSelected = 24;
+          if (bottleSizeSelected[2]) {
+            enabled = false;
+            amountSelected = 24;
+          } else {
+            amountSelected = 0;
+            enabled = true;
+          }
         });
         break;
       case 3:
@@ -261,12 +316,25 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
           bottleSizeSelected[0] = false;
           bottleSizeSelected[1] = false;
           bottleSizeSelected[2] = false;
-          bottleSizeSelected[3] = true;
-          amountSelected = 32;
+          bottleSizeSelected[3] = !bottleSizeSelected[3];
+          if (bottleSizeSelected[3]) {
+            amountSelected = 32;
+            enabled = false;
+          } else {
+            amountSelected = 0;
+            enabled = true;
+          }
         });
         break;
       default:
         break;
     }
+  }
+
+  _enableTextField() {
+    enabled = true;
+    bottleSizeSelected = [false, false, false, false];
+    focusNode.requestFocus();
+    setState(() {});
   }
 }

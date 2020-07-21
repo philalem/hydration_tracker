@@ -253,8 +253,7 @@ class _HomeState extends State<Home> {
                                 todaysAmount: todaysAmount,
                               ),
                             ))
-                            .then((value) => setState(() =>
-                                print('Refreshing page after pop back over.'))),
+                            .then((value) => initializeData()),
                         child: Text(
                           'Or add a another amount',
                         ),

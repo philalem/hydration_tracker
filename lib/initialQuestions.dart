@@ -170,6 +170,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
               decimal: true,
               signed: false,
             ),
+            onTap: () => _enableTextField(),
             inputFormatters: [
               DecimalTextInputFormatter(intRange: 2, decimalRange: 2)
             ],
@@ -357,6 +358,13 @@ class _InitialQuestionsState extends State<InitialQuestions> {
       return 32.0;
     }
     return 8.0;
+  }
+
+  _enableTextField() {
+    focusNode.requestFocus();
+    enabled = true;
+    bottleSizeSelected = [false, false, false, false];
+    setState(() {});
   }
 }
 
