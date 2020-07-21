@@ -23,6 +23,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
   int questionViewIndex = 0;
   Widget questionView;
   TextEditingController enteredAmount = TextEditingController();
+  FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
@@ -106,6 +107,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
             height: 10,
           ),
           CupertinoTextField(
+            focusNode: focusNode,
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border(bottom: BorderSide(color: Colors.blue, width: 1)),
@@ -118,7 +120,6 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
             style: TextStyle(
               color: Colors.black,
             ),
-            enabled: enabled,
             controller: enteredAmount,
             keyboardType: TextInputType.numberWithOptions(
               decimal: true,
@@ -127,6 +128,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
             inputFormatters: [
               DecimalTextInputFormatter(intRange: 3, decimalRange: 2)
             ],
+            onTap: () => _enableTextField(),
             placeholder: 'Ex: 12.5s',
           ),
         ],
@@ -227,6 +229,8 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
   }
 
   _updateBottleSelection(numberSelected) {
+    focusNode.unfocus();
+    enteredAmount.clear();
     switch (numberSelected) {
       case 0:
         setState(() {
@@ -313,6 +317,13 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
         );
       },
     );
+  }
+
+  _enableTextField() {
+    enabled = true;
+    bottleSizeSelected = [false, false, false, false];
+    focusNode.requestFocus();
+    setState(() {});
   }
 }
 

@@ -164,7 +164,6 @@ class _InitialQuestionsState extends State<InitialQuestions> {
             style: TextStyle(
               color: Colors.black,
             ),
-            enabled: enabled,
             controller: enteredAmount,
             keyboardType: TextInputType.numberWithOptions(
               decimal: true,
@@ -275,6 +274,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
 
   _updateBottleSelection(numberSelected) {
     focusNode.unfocus();
+    enteredAmount.clear();
     switch (numberSelected) {
       case 0:
         setState(() {
@@ -361,9 +361,9 @@ class _InitialQuestionsState extends State<InitialQuestions> {
   }
 
   _enableTextField() {
-    focusNode.requestFocus();
     enabled = true;
     bottleSizeSelected = [false, false, false, false];
+    focusNode.requestFocus();
     setState(() {});
   }
 }
