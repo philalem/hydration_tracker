@@ -86,6 +86,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
   }
 
   Container selectBottleSize() {
+    //TODO: add the text for custom amounts
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 40),
       child: Column(

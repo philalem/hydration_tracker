@@ -173,7 +173,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
             inputFormatters: [
               DecimalTextInputFormatter(intRange: 2, decimalRange: 2)
             ],
-            placeholder: 'Or enter your own.',
+            placeholder: 'Or enter your own',
           ),
         ],
       ),
