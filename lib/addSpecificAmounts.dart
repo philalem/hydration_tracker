@@ -37,7 +37,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
       navigationBar: CupertinoNavigationBar(
         brightness: Brightness.light,
         backgroundColor: Colors.transparent,
-        middle: Text('Add a specific amount of water'),
+        middle: Text('Add a specific amount of water', textScaleFactor: 1.0),
         trailing: CupertinoButton(
           onPressed: () async {
             SharedPreferences preferences =
@@ -90,6 +90,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
           ),
           Text(
             'Select a common amount',
+            textScaleFactor: 1.0,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(
@@ -101,6 +102,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
           ),
           Text(
             'Or enter your own',
+            textScaleFactor: 1.0,
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(
@@ -155,7 +157,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
                     color:
                         bottleSizeSelected[0] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('8 oz'),
+                  Text('8 oz', textScaleFactor: 1.0),
                 ],
               ),
             ),
@@ -176,7 +178,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
                     color:
                         bottleSizeSelected[1] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('16 oz'),
+                  Text('16 oz', textScaleFactor: 1.0),
                 ],
               ),
             ),
@@ -197,7 +199,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
                     color:
                         bottleSizeSelected[2] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('24 oz'),
+                  Text('24 oz', textScaleFactor: 1.0),
                 ],
               ),
             ),
@@ -218,7 +220,7 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
                     color:
                         bottleSizeSelected[3] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('32 oz'),
+                  Text('32 oz', textScaleFactor: 1.0),
                 ],
               ),
             ),
@@ -302,13 +304,12 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text("Maximum Intake Reached"),
-          content: Text("You have reached the maximum water intake (240 oz)."),
+          title: Text("Maximum Intake Reached", textScaleFactor: 1.0),
+          content: Text("You have reached the maximum water intake (240 oz).",
+              textScaleFactor: 1.0),
           actions: <Widget>[
             CupertinoDialogAction(
-              child: Text(
-                "Okay",
-              ),
+              child: Text("Okay", textScaleFactor: 1.0),
               onPressed: () {
                 Navigator.of(context).popUntil((route) => route.isFirst);
               },

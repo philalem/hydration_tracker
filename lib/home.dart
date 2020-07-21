@@ -89,7 +89,10 @@ class _HomeState extends State<Home> {
         slivers: <Widget>[
           CupertinoSliverNavigationBar(
             brightness: Brightness.light,
-            largeTitle: Text('Dashboard'),
+            largeTitle: Text(
+              'Dashboard',
+              textScaleFactor: 1.0,
+            ),
             backgroundColor: Colors.transparent,
             trailing: CupertinoButton(
               onPressed: () => Navigator.of(context)
@@ -127,6 +130,7 @@ class _HomeState extends State<Home> {
                             fit: BoxFit.contain,
                             child: Text(
                               'Today\'s water intake',
+                              textScaleFactor: 1.0,
                               style: TextStyle(
                                   fontSize: 24, fontWeight: FontWeight.bold),
                             ),
@@ -152,6 +156,7 @@ class _HomeState extends State<Home> {
                                 fit: BoxFit.contain,
                                 child: Text(
                                   "${(percent * 100).floor().toInt()}% hydrated",
+                                  textScaleFactor: 1.0,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 26.0),
@@ -165,6 +170,7 @@ class _HomeState extends State<Home> {
                                           ? "${((percent - 1).abs() * 100).ceil().toInt()}% to go!"
                                           : "Awesome job!"
                                       : ' ',
+                                  textScaleFactor: 1.0,
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 26.0),
@@ -182,10 +188,18 @@ class _HomeState extends State<Home> {
                       ),
                       Column(
                         children: <Widget>[
-                          Text('Goal: $waterGoal oz'),
-                          Text('Amount today: ${todaysAmount['amount']} oz'),
                           Text(
-                              'Amount remaining: ${todaysDifference != null ? todaysDifference > 0 ? todaysDifference.toString() : 0.toString() : ''} oz'),
+                            'Goal: $waterGoal oz',
+                            textScaleFactor: 1.0,
+                          ),
+                          Text(
+                            'Amount today: ${todaysAmount['amount']} oz',
+                            textScaleFactor: 1.0,
+                          ),
+                          Text(
+                            'Amount remaining: ${todaysDifference != null ? todaysDifference > 0 ? todaysDifference.toString() : 0.toString() : ''} oz',
+                            textScaleFactor: 1.0,
+                          ),
                         ],
                       ),
                       SizedBox(
@@ -240,6 +254,7 @@ class _HomeState extends State<Home> {
                         },
                         child: Text(
                           'Add',
+                          textScaleFactor: 1.0,
                         ),
                       ),
                       SizedBox(
@@ -256,6 +271,7 @@ class _HomeState extends State<Home> {
                             .then((value) => initializeData()),
                         child: Text(
                           'Or add a another amount',
+                          textScaleFactor: 1.0,
                         ),
                       ),
                       SizedBox(
@@ -288,6 +304,7 @@ class _HomeState extends State<Home> {
                                   fit: BoxFit.contain,
                                   child: Text(
                                     'Water Intake Over Time',
+                                    textScaleFactor: 1.0,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 32,
@@ -466,12 +483,19 @@ class _HomeState extends State<Home> {
       context: context,
       builder: (context) {
         return CupertinoAlertDialog(
-          title: Text("Maximum Intake Reached"),
-          content: Text("You have reached the maximum water intake (240 oz)."),
+          title: Text(
+            "Maximum Intake Reached",
+            textScaleFactor: 1.0,
+          ),
+          content: Text(
+            "You have reached the maximum water intake (240 oz).",
+            textScaleFactor: 1.0,
+          ),
           actions: <Widget>[
             CupertinoDialogAction(
               child: Text(
                 "Okay",
+                textScaleFactor: 1.0,
               ),
               onPressed: () {
                 Navigator.of(context).pop();

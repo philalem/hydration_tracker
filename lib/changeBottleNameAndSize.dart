@@ -63,7 +63,6 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
       navigationBar: CupertinoNavigationBar(
         brightness: Brightness.light,
         backgroundColor: Colors.transparent,
-        middle: Text('Edit your bottle selection'),
         trailing: CupertinoButton(
           onPressed: () async {
             SharedPreferences preferences =
@@ -83,7 +82,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
             Navigator.of(context).pop();
           },
           padding: EdgeInsets.zero,
-          child: Text('Save'),
+          child: Text('Save', textScaleFactor: 1.0),
         ),
       ),
       child: SafeArea(
@@ -105,6 +104,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
           Text(
             'Size',
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            textScaleFactor: 1.0,
           ),
           SizedBox(
             height: 10,
@@ -141,9 +141,12 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
           SizedBox(
             height: 20,
           ),
-          Text(
-            'Nickname',
-            style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          FittedBox(
+            fit: BoxFit.contain,
+            child: Text(
+              'Nickname',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            ),
           ),
           SizedBox(
             height: 10,
@@ -189,7 +192,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
                     color:
                         bottleSizeSelected[0] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('8 oz'),
+                  Text('8 oz', textScaleFactor: 1.0),
                 ],
               ),
             ),
@@ -210,7 +213,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
                     color:
                         bottleSizeSelected[1] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('16 oz'),
+                  Text('16 oz', textScaleFactor: 1.0),
                 ],
               ),
             ),

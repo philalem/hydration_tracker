@@ -72,12 +72,18 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     CupertinoButton(
                       onPressed: () => navigateToPreviousPage(),
                       padding: EdgeInsets.zero,
-                      child: Text('Back'),
+                      child: Text(
+                        'Back',
+                        textScaleFactor: 1.0,
+                      ),
                     ),
                   CupertinoButton(
                     onPressed: () => navigateToNextPage(bottleNameController),
                     padding: EdgeInsets.zero,
-                    child: Text('Next'),
+                    child: Text(
+                      'Next',
+                      textScaleFactor: 1.0,
+                    ),
                   )
                 ],
               ),
@@ -141,7 +147,9 @@ class _InitialQuestionsState extends State<InitialQuestions> {
         children: <Widget>[
           Text(
             'What size water bottle do you use most?',
+            textScaleFactor: 1.0,
             style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            softWrap: true,
           ),
           SizedBox(
             height: 10,
@@ -199,7 +207,10 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     color:
                         bottleSizeSelected[0] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('8 oz'),
+                  Text(
+                    '8 oz',
+                    textScaleFactor: 1.0,
+                  ),
                 ],
               ),
             ),
@@ -220,7 +231,10 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     color:
                         bottleSizeSelected[1] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('16 oz'),
+                  Text(
+                    '16 oz',
+                    textScaleFactor: 1.0,
+                  ),
                 ],
               ),
             ),
@@ -241,7 +255,10 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     color:
                         bottleSizeSelected[2] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('24 oz'),
+                  Text(
+                    '24 oz',
+                    textScaleFactor: 1.0,
+                  ),
                 ],
               ),
             ),
@@ -262,7 +279,10 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                     color:
                         bottleSizeSelected[3] ? Colors.blue : Colors.grey[300],
                   ),
-                  Text('32 oz'),
+                  Text(
+                    '32 oz',
+                    textScaleFactor: 1.0,
+                  ),
                 ],
               ),
             ),
