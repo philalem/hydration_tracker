@@ -126,7 +126,7 @@ class _InitialQuestionsState extends State<InitialQuestions> {
                 bottleSizeSelected[1] ||
                 bottleSizeSelected[2] ||
                 bottleSizeSelected[3]) ||
-            enteredAmount != null && enabled) &&
+            enteredAmount.text.isNotEmpty && enabled) &&
         questionViewIndex == 0) {
       setState(() => questionViewIndex = 1);
     }
