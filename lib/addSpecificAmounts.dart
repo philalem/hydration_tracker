@@ -38,40 +38,6 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
         brightness: Brightness.light,
         backgroundColor: Colors.transparent,
         middle: Text('Add or remove water', textScaleFactor: 1.0),
-        trailing: CupertinoButton(
-          onPressed: () async {
-            SharedPreferences preferences =
-                await SharedPreferences.getInstance();
-            if (amountSelected != 0.0 || enteredAmount.text.isNotEmpty) {
-              if (enabled) {
-                if (widget.todaysAmount['amount'] +
-                        double.parse(enteredAmount.text) >
-                    240.0) {
-                  widget.todaysAmount['amount'] = 240.0;
-                  showMaxAmountAlert();
-                } else {
-                  widget.todaysAmount['amount'] =
-                      widget.todaysAmount['amount'] +
-                          double.parse(enteredAmount.text);
-                  Navigator.of(context).pop();
-                }
-              } else {
-                if (widget.todaysAmount['amount'] + amountSelected > 240.0) {
-                  widget.todaysAmount['amount'] = 240.0;
-                  showMaxAmountAlert();
-                } else {
-                  widget.todaysAmount['amount'] =
-                      widget.todaysAmount['amount'] + amountSelected;
-                  Navigator.of(context).pop();
-                }
-              }
-              preferences.setString(
-                  'todaysAmount', jsonEncode(widget.todaysAmount));
-            }
-          },
-          padding: EdgeInsets.zero,
-          child: Text('Save'),
-        ),
       ),
       child: SafeArea(
         child: selectBottleSize(),
