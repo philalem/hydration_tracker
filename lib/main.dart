@@ -120,17 +120,27 @@ class Hydratee extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return CupertinoApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: CupertinoThemeData(
-          scaffoldBackgroundColor: Colors.white,
-          primaryColor: Colors.blue,
-          brightness: Brightness.light),
-      home: Wrapper(),
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-        child: child,
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+
+        if (!currentFocus.hasPrimaryFocus &&
+            currentFocus.focusedChild != null) {
+          FocusManager.instance.primaryFocus.unfocus();
+        }
+      },
+      child: CupertinoApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: CupertinoThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            primaryColor: Colors.blue,
+            brightness: Brightness.light),
+        home: Wrapper(),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: child,
+        ),
       ),
     );
   }

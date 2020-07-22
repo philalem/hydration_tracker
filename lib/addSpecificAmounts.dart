@@ -38,9 +38,23 @@ class _AddSpecificAmountState extends State<AddSpecificAmount> {
         brightness: Brightness.light,
         backgroundColor: Colors.transparent,
         middle: Text('Add or remove water', textScaleFactor: 1.0),
+        trailing: focusNode.hasFocus
+            ? CupertinoButton(
+                padding: EdgeInsets.zero,
+                onPressed: () {
+                  focusNode.unfocus();
+                  setState(() {});
+                },
+                child: Text('Done'),
+              )
+            : null,
       ),
       child: SafeArea(
-        child: selectBottleSize(),
+        child: ListView(
+          children: <Widget>[
+            selectBottleSize(),
+          ],
+        ),
       ),
     );
   }

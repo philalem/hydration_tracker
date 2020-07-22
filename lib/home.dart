@@ -204,7 +204,7 @@ class _HomeState extends State<Home> {
                             style: TextStyle(fontSize: 20),
                           ),
                           Text(
-                            'Amount remaining: ${todaysDifference != null ? todaysDifference > 0 ? todaysDifference.toString() : 0.toString() : ''} oz',
+                            'Amount remaining: ${todaysDifference != null ? (todaysDifference > 0 ? todaysDifference.toString() : 0.toString()) : ''} oz',
                             textScaleFactor: 1.0,
                             style: TextStyle(fontSize: 20),
                           ),
@@ -249,11 +249,14 @@ class _HomeState extends State<Home> {
                                       bottleInfo['amount'] >
                                   240.0) {
                                 todaysAmount['amount'] = 240.0;
+                                todaysDifference = 0;
                                 showMaxAmountAlert();
                               } else {
                                 todaysAmount['amount'] =
                                     todaysAmount['amount'] +
                                         bottleInfo['amount'];
+                                todaysDifference =
+                                    waterGoal - todaysAmount['amount'];
                               }
                               double tempPercent =
                                   todaysAmount['amount'] / waterGoal > 1
@@ -279,10 +282,13 @@ class _HomeState extends State<Home> {
                                       bottleInfo['amount'] <
                                   0.0) {
                                 todaysAmount['amount'] = 0.0;
+                                todaysDifference = waterGoal;
                               } else {
                                 todaysAmount['amount'] =
                                     todaysAmount['amount'] -
                                         bottleInfo['amount'];
+                                todaysDifference =
+                                    waterGoal - todaysAmount['amount'];
                               }
                               double tempPercent =
                                   todaysAmount['amount'] / waterGoal > 1

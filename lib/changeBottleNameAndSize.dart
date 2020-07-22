@@ -60,6 +60,7 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
+      //TODO: add Done button for text box
       navigationBar: CupertinoNavigationBar(
         brightness: Brightness.light,
         backgroundColor: Colors.transparent,
@@ -86,13 +87,16 @@ class _ChangeBottleNameAndSizeState extends State<ChangeBottleNameAndSize> {
         ),
       ),
       child: SafeArea(
-        child: selectBottleSize(),
+        child: ListView(
+          children: <Widget>[
+            selectBottleSize(),
+          ],
+        ),
       ),
     );
   }
 
   Container selectBottleSize() {
-    //TODO: add the text for custom amounts
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 40),
       child: Column(
